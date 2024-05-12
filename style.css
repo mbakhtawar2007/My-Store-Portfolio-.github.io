@@ -1,0 +1,52 @@
+body {
+    background-color: aqua;
+    /* background-image: url(https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=600);
+    background-repeat: no-repeat; */
+}
+
+nav {
+    background-color: transparent;
+}
+
+.container {
+    width: 100%;
+    height: 500px;
+}
+
+.backgroundPic,
+.backgroundPic2 {
+    width: 100%;
+    height: 1600px;
+    background-size: cover;
+    position: sticky;
+}
+
+.backgroundPic {
+    background-image: url(https://media.istockphoto.com/id/1952832315/photo/online-shopping-man-hold-credit-or-debit-card-make-online-purchase.jpg?s=612x612&w=0&k=20&c=1bGkjnW6YJ76d3tF4Wn6-nSh56iORYt7DcbowHtTdRM=);
+}
+
+/* .backgroundPic2 {
+    background-image: url(https://media.istockphoto.com/id/1542477002/photo/woman-cashier-wears-an-apron-and-using-pos-terminal-to-payment-for-credit-card-on-coffee-shop.jpg?s=612x612&w=0&k=20&c=B2hxzqgE28_FAM7Osok8vGeCIbOaRaELqYNn8MUFLbc=);
+} */
+
+
+.sec1Content-title{
+    margin-top: 170px;
+    margin-right: 23px;
+    margin-bottom: 15px;
+}
+
+.sec1Content-offer{
+    margin-top: 15px;
+    margin-right: 23px;
+}
+
+.btn{
+    margin-top: 4%;
+}
+
+.sec1content-Products{
+    width: 100%;
+    height: 53%;
+    background-color: white;
+}
