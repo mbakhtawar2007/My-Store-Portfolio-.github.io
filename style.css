@@ -10,43 +10,54 @@ nav {
 
 .container {
     width: 100%;
-    height: 500px;
+    height: auto;
 }
 
 .backgroundPic,
 .backgroundPic2 {
     width: 100%;
-    height: 1600px;
+    height: auto;
     background-size: cover;
     position: sticky;
 }
 
 .backgroundPic {
     background-image: url(https://media.istockphoto.com/id/1952832315/photo/online-shopping-man-hold-credit-or-debit-card-make-online-purchase.jpg?s=612x612&w=0&k=20&c=1bGkjnW6YJ76d3tF4Wn6-nSh56iORYt7DcbowHtTdRM=);
+
 }
 
 /* .backgroundPic2 {
     background-image: url(https://media.istockphoto.com/id/1542477002/photo/woman-cashier-wears-an-apron-and-using-pos-terminal-to-payment-for-credit-card-on-coffee-shop.jpg?s=612x612&w=0&k=20&c=B2hxzqgE28_FAM7Osok8vGeCIbOaRaELqYNn8MUFLbc=);
 } */
 
+.sec1Content{
+padding-bottom: 20%;
+}
 
-.sec1Content-title{
+
+.sec1Content-title {
     margin-top: 170px;
     margin-right: 23px;
     margin-bottom: 15px;
 }
 
-.sec1Content-offer{
+.sec1Content-offer {
     margin-top: 15px;
     margin-right: 23px;
 }
 
-.btn{
+.btn {
     margin-top: 4%;
 }
 
-.sec1content-Products{
+.sec1content-Products {
     width: 100%;
-    height: 53%;
+    height: auto;
+    padding-top: 5%;
+    padding-bottom: 5%;
     background-color: white;
+}
+
+.sec1cards {
+    margin-top: 10px;
 }
