@@ -241,61 +241,35 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-A5MKlrGnJ0z7TmmHggMfgE+h1mtkW4TPe+fstjXn34EVN9OHsSv7hOoT1zM46s" crossorigin="anonymous">
+    </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Simulate user login status (true if logged in, false if not)
+      const userLoggedIn = false; // Change this value to true or false to test
+
+      const navbarAccountItems = document.getElementById("navbar-account-items");
+
+      if (userLoggedIn) {
+        // User is logged in
+        const logoutItem = document.createElement("li");
+        logoutItem.className = "nav-item";
+        logoutItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a>';
+        navbarAccountItems.appendChild(logoutItem);
+      } else {
+        // User is not logged in
+        const signInItem = document.createElement("li");
+        signInItem.className = "nav-item";
+        signInItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-sign-in-alt"></i> Sign In</a>';
+        navbarAccountItems.appendChild(signInItem);
+
+        const signUpItem = document.createElement("li");
+        signUpItem.className = "nav-item";
+        signUpItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-user-plus"></i> Sign Up</a>';
+        navbarAccountItems.appendChild(signUpItem);
+      }
+    });
   </script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Simulate user login status (true if logged in, false if not)
-    const userLoggedIn = false; // Change this value to true or false to test
-
-    const navbarAccountItems = document.getElementById("navbar-account-items");
-
-    if (userLoggedIn) {
-      // User is logged in
-      const logoutItem = document.createElement("li");
-      logoutItem.className = "nav-item";
-      logoutItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a>';
-      navbarAccountItems.appendChild(logoutItem);
-    } else {
-      // User is not logged in
-      const signInItem = document.createElement("li");
-      signInItem.className = "nav-item";
-      signInItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-sign-in-alt"></i> Sign In</a>';
-      navbarAccountItems.appendChild(signInItem);
-
-      const signUpItem = document.createElement("li");
-      signUpItem.className = "nav-item";
-      signUpItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-user-plus"></i> Sign Up</a>';
-      navbarAccountItems.appendChild(signUpItem);
-    }
-  });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </body>
 
