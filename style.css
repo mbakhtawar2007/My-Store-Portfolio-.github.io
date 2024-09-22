@@ -1,122 +1,128 @@
-/* body {
-    background-color: aqua; 
-     background-image: url(https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=600);
-    background-repeat: no-repeat; 
-} */
-
-/* nav {
-    background-color: transparent;
-} */
-
-
-.container {
-    width: 100%;
-    height: auto;
+/* Fonts */
+body {
+    font-family: 'Poppins', sans-serif;
 }
 
-.backgroundPic{
-    width: 100%;
-    height: auto;
-    background-size: cover;
+/* Navbar */
+.navbar {
+    background-color: black;
     position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.backgroundPic {
-    background-image: url(https://media.istockphoto.com/id/1952832315/photo/online-shopping-man-hold-credit-or-debit-card-make-online-purchase.jpg?s=612x612&w=0&k=20&c=1bGkjnW6YJ76d3tF4Wn6-nSh56iORYt7DcbowHtTdRM=);
-
+.navbar-brand,
+.nav-link,
+.btn {
+    color: silver !important;
 }
 
-/* .backgroundPic2 {
-    background-image: url(https://media.istockphoto.com/id/1542477002/photo/woman-cashier-wears-an-apron-and-using-pos-terminal-to-payment-for-credit-card-on-coffee-shop.jpg?s=612x612&w=0&k=20&c=B2hxzqgE28_FAM7Osok8vGeCIbOaRaELqYNn8MUFLbc=);
-} */
-
-.sec1Content{
-padding-bottom: 20%;
+.nav-link:hover {
+    color: #ff6666 !important; /* Reddish Color */
 }
 
+.btn-outline-light {
+    border-color: silver;
+}
 
-.sec1Content-title {
-    margin-top: 170px;
-    margin-right: 23px;
+.btn-outline-light:hover {
+    background-color: silver;
+    border-color: silver;
+    color: black;
+}
+
+/* Hero Section */
+.sec1Content {
+    padding: 10% 5%;
+    background-color: rgba(0, 0, 0, 0.8); /* Black */
+    color: white;
+    border-radius: 20px;
+}
+
+/* Cards */
+.card {
+    border-radius: 15px; /* Rounded corners */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Lift effect on hover */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+.card-body {
+    background-color: #f8f9fa; /* Light background for card body */
+}
+
+.card-title {
+    font-weight: bold;
+    color: #333; /* Dark text for better contrast */
+}
+
+.card-text {
+    color: #666; /* Slightly muted text */
+}
+
+.btn-dark {
+    background-color: #333; /* Dark button background */
+    color: #fff; /* White button text */
+}
+
+.btn-dark:hover {
+    background-color: #555; /* Lighter on hover */
+}
+
+/* Additional Styles */
+.lastsec {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+}
+
+.lastsec-hd {
     margin-bottom: 15px;
 }
 
-.sec1Content-offer {
-    margin-top: 15px;
-    margin-right: 23px;
+.copywritesec {
+    background-color: #222;
+    color: #ccc;
+    text-align: center;
+    padding: 10px 0;
 }
 
-.btn {
-    margin-top: 4%;
+/* Product Section */
+.sec1content-Products, .trending {
+    padding: 5% 0;
 }
 
-.sec1content-Products {
-    width: 100%;
-    height: auto;
-    padding-top: 5%;
-    padding-bottom: 5%;
-    background-color: white;
+/* Fotter Section*/
+.lastsec {
+    background-color: #333;
+    color: #fff;
 }
 
-.sec1cards {
-    margin-top: 10px;
+.lastsec-hd {
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 24px; /* Increased font size for visibility */
 }
 
-.lastsec{
-/* border: 1px solid; */
-/* background-color: purple; */
-padding: 10%;
-display: flex;
-background-color: wheat;
+.lastsec ul {
+    padding-left: 0; /* Remove default padding */
 }
 
-.lastsec-storename{
-    width: 50%;
-    /* background-color: aqua; */
-    display: flex;
-    flex-direction: column;
-    padding: 5%;
+.lastsec a {
+    text-decoration: none; /* Remove underline */
 }
 
-.lastsec-hd{
-    color: black;
-    font-size: 25px;
-    font-family: serif;
-    font-weight: 500;
-    margin-top: 10%;
-    /* margin-right: 20%; */
-}
-.lastsec-listing{
-    width: 50%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 2%;
-    /* background-color: blue; */
+.lastsec a:hover {
+    text-decoration: underline; /* Underline on hover */
 }
 
-/* .List{
-    background-color: red; 
-    border: 1px solid; 
-    
-    
-} */
-
-h4{
-    font-size: 18px;
-}
-
-.copywritesec{
-    width: 100%;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-}
-.copywritesec-text{
-    font-family: 'Courier New', Courier, monospace;
-    /* width: 50%; */
-    /* height: 10px; */
-    display: flex;
-    margin: auto;
-
+.copywritesec {
+    background-color: #222;
+    color: #ccc;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px; /* Adjusted font size for readability */
 }

@@ -2,270 +2,203 @@
 <html lang="en">
 
 <head>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="./style.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Store</title>
-  <style>
-    .navbar {
-      background-color: #343a40;
-      /* Dark background */
-    }
 
-    .navbar-brand,
-    .nav-link,
-    .btn {
-      color: #fff !important;
-      /* White text */
-    }
-
-    .nav-link {
-      margin-right: 1rem;
-      /* Space between nav items */
-    }
-
-    .nav-link:hover {
-      color: #ffd700 !important;
-      /* Gold color on hover */
-    }
-
-    .btn-outline-primary {
-      border-color: #ffd700;
-      /* Gold border */
-    }
-
-    .btn-outline-primary .fa-shopping-cart {
-      color: #ffd700;
-      /* Gold icon */
-    }
-
-    .btn-outline-primary:hover {
-      background-color: #ffd700;
-      border-color: #ffd700;
-      color: #343a40;
-      /* Dark text on hover */
-    }
-
-    .form-control {
-      border-radius: 20px;
-      /* Rounded search bar */
-    }
-
-    .btn-outline-success {
-      border-radius: 20px;
-      /* Rounded search button */
-    }
-  </style>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-  <div class="Container">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">My Store</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0" id="navbar-account-items">
+          <li class="nav-item">
+            <a class="nav-link" href="allProducts.html">All Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Men's Collection</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Women's Collection</a>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-light">
+              <i class="fas fa-shopping-cart"></i>
+            </button>
+          </li>
+        </ul>
 
-    <div class="backgroundPic">
-
-
-      <nav class="navbar navbar-expand-lg navbar-light  ">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">My Store</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0" id="navbar-account-items">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="allProducts.html">All Products</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Men's Collection</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Women's Collection</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <button class="btn btn-outline-primary" title="View Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                  </button>
-                </a>
-              </li>
-            </ul>
-
-            <!-- <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"1
-                  aria-expanded="false">
-                  Dropdown
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li> -->
-            <!-- <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </li> -->
-            <form class="d-flex ms-3">
-              <input class="form-control me-2" type="search" placeholder="Search for products..." aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-        </div>
-      </nav>
-
-
-
-      <div class="sec1Content container">
-        <h1 class="sec1Content-title">
-          Treasure Land For Shopping
-        </h1>
-
-        <h3 class="sec1Content-offer">
-          15% Off On All Products
-        </h3>
-
-        <button class="btn btn-primary sec1Content-btn1">Shop Now</button>
-        <button class="btn btn-secondary sec1Content-btn2">Find More</button>
-
+        <!-- Search Bar -->
+        <form class="d-flex ms-3">
+          <input class="form-control me-2" type="search" placeholder="Search for products..." aria-label="Search">
+          <button class="btn btn-outline-light" type="submit">Search</button>
+        </form>
       </div>
-
     </div>
+  </nav>
 
+  <!-- Main Content -->
+  <main>
+    <section class="backgroundPic">
+      <div class="container sec1Content text-center">
+        <h1>Find Your Style, Your Way</h1>
+        <h3>Exclusive Deals on New Arrivals</h3>
+        <div>
+          <button class="btn btn-light">Shop Now</button>
+          <button class="btn btn-outline-light">Learn More</button>
+        </div>
+      </div>
+    </section>
 
-
-
-
-
-    <div class="sec1content-Products">
+    <section class="sec1content-Products py-5">
       <div class="container">
-        <div class="row " class="sec1cards">
+        <h2 class="text-center mb-4">Featured Products</h2>
+        <div class="row">
           <div class="col-md-4">
-            <div class="card h-100">
-              <img
-                src="https://images.pexels.com/photos/10471216/pexels-photo-10471216.jpeg?auto=compress&cs=tinysrgb&w=600"
-                class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-                  content. This content is a little bit longer.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            <div class="card h-100 shadow-lg border-0">
+              <img src="https://images.pexels.com/photos/256541/pexels-photo-256541.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top rounded-top" alt="Stylish Jacket">
+              <div class="card-body text-center">
+                <h5 class="card-title">Stylish Jacket</h5>
+                <p class="card-text">Comfort and style for every season.</p>
+                <p class="card-text"><small class="text-muted">Updated 2 mins ago</small></p>
+                <a href="#" class="btn btn-dark">View Details</a>
               </div>
             </div>
           </div>
+
           <div class="col-md-4">
-            <div class="card h-100">
-              <img
-                src="https://images.pexels.com/photos/5889482/pexels-photo-5889482.jpeg?auto=compress&cs=tinysrgb&w=600"
-                class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            <div class="card h-100 shadow-lg border-0">
+              <img src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top rounded-top" alt="Casual Shoes">
+              <div class="card-body text-center">
+                <h5 class="card-title">Casual Shoes</h5>
+                <p class="card-text">Perfect for your everyday look.</p>
+                <p class="card-text"><small class="text-muted">Updated 10 mins ago</small></p>
+                <a href="#" class="btn btn-dark">View Details</a>
               </div>
             </div>
           </div>
+
           <div class="col-md-4">
-            <div class="card h-100">
-              <img
-                src="https://images.pexels.com/photos/4800191/pexels-photo-4800191.jpeg?auto=compress&cs=tinysrgb&w=600"
-                class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-                  content. This card has even longer content than the first to show that equal height action.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            <div class="card h-100 shadow-lg border-0">
+              <img src="https://images.pexels.com/photos/935985/pexels-photo-935985.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top rounded-top" alt="Classic Sunglasses">
+              <div class="card-body text-center">
+                <h5 class="card-title">Classic Sunglasses</h5>
+                <p class="card-text">Stylish and UV protective.</p>
+                <p class="card-text"><small class="text-muted">Updated 5 mins ago</small></p>
+                <a href="#" class="btn btn-dark">View Details</a>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
+    <!-- Trending Section -->
+    <section class="trending py-5">
+      <div class="container text-center">
+        <h2 class="mb-4">Trending Now</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card h-100 shadow-lg border-0">
+              <img src="https://images.pexels.com/photos/2101218/pexels-photo-2101218.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top rounded-top" alt="Trendsetter Bag">
+              <div class="card-body">
+                <h5 class="card-title">Trendsetter Bag</h5>
+                <p class="card-text">The must-have accessory for every fashionista.</p>
+                <p class="card-text"><small class="text-muted">Updated 1 hour ago</small></p>
+                <a href="#" class="btn btn-dark">Shop Now</a>
+              </div>
+            </div>
+          </div>
 
+          <div class="col-md-4">
+            <div class="card h-100 shadow-lg border-0">
+              <img src="https://images.pexels.com/photos/3215578/pexels-photo-3215578.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top rounded-top" alt="Stylish Watch">
+              <div class="card-body">
+                <h5 class="card-title">Stylish Watch</h5>
+                <p class="card-text">Elevate your look with this timeless piece.</p>
+                <p class="card-text"><small class="text-muted">Updated 30 mins ago</small></p>
+                <a href="#" class="btn btn-dark">Shop Now</a>
+              </div>
+            </div>
+          </div>
 
-
-    <div class="lastsec">
-
-
-      <div class="lastsec-storename">
-        <h2 class="lastsec-hd">My Store</h2>
-        <span class="lastsec-text">The Best Thing You Got Anywhere, Anytime</span>
-      </div>
-
-
-      <div class="lastsec-listing">
-
-        <div class="List coloumn1">
-          <h4>Category 1</h4>
-          <li>List</li>
-          <li>List</li>
-          <li>List</li>
-          <li>List</li>
-          <li>List</li>
-          <li>List</li>
+          <div class="col-md-4">
+            <div class="card h-100 shadow-lg border-0">
+              <img src="https://images.pexels.com/photos/3534346/pexels-photo-3534346.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top rounded-top" alt="Chic Backpack">
+              <div class="card-body">
+                <h5 class="card-title">Chic Backpack</h5>
+                <p class="card-text">Perfect for everyday use and stylish outings.</p>
+                <p class="card-text"><small class="text-muted">Updated 2 hours ago</small></p>
+                <a href="#" class="btn btn-dark">Shop Now</a>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
+    
+  </main>
 
-        <div class="List coloumn2">
-          <h4>Category 1</h4>
-          <li>List</li>
-          <li>List</li>
-          <li>List</li>
-          <li>List</li>
-          <li>List</li>
-          <li>List</li>
+<!-- Footer -->
+<footer class="lastsec py-4" style="background-color: #3B0A0A; color: #fff;">
+  <div class="container text-center">
+    <h2 class="lastsec-hd">My Store</h2>
+    <p>Style you can count on, anywhere, anytime.</p>
+    <div class="row">
+      <div class="col-md-4">
+        <h4>Categories</h4>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light">Men's Fashion</a></li>
+          <li><a href="#" class="text-light">Women's Fashion</a></li>
+          <li><a href="#" class="text-light">Accessories</a></li>
+          <li><a href="#" class="text-light">Sale Items</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h4>Quick Links</h4>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light">About Us</a></li>
+          <li><a href="#" class="text-light">Contact Us</a></li>
+          <li><a href="#" class="text-light">Privacy Policy</a></li>
+          <li><a href="#" class="text-light">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h4>Follow Us</h4>
+        <div>
+          <a href="#" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="text-light"><i class="fab fa-instagram"></i></a>
         </div>
-
       </div>
     </div>
-
-
-    <div class="copywritesec">
-      <siv class="copywritesec-text">Copyright © 2024 Muhammad Bakhtawar. Powered by Muhammad Bakhtawar.
-    </div>
-
   </div>
+</footer>
+
+<div class="copywritesec">
+  <p class="copywritesec-text">Copyright © 2024 Muhammad Bakhtawar. Powered by Muhammad Bakhtawar.</p>
+</div>
 
 
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-A5MKlrGnJ0z7TmmHggMfgE+h1mtkW4TPe+fstjXn34EVN9OHsSv7hOoT1zM46s" crossorigin="anonymous">
-    </script>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Simulate user login status (true if logged in, false if not)
-      const userLoggedIn = false; // Change this value to true or false to test
-
-      const navbarAccountItems = document.getElementById("navbar-account-items");
-
-      if (userLoggedIn) {
-        // User is logged in
-        const logoutItem = document.createElement("li");
-        logoutItem.className = "nav-item";
-        logoutItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a>';
-        navbarAccountItems.appendChild(logoutItem);
-      } else {
-        // User is not logged in
-        const signInItem = document.createElement("li");
-        signInItem.className = "nav-item";
-        signInItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-sign-in-alt"></i> Sign In</a>';
-        navbarAccountItems.appendChild(signInItem);
-
-        const signUpItem = document.createElement("li");
-        signUpItem.className = "nav-item";
-        signUpItem.innerHTML = '<a class="nav-link" href="#"><i class="fas fa-user-plus"></i> Sign Up</a>';
-        navbarAccountItems.appendChild(signUpItem);
-      }
-    });
-  </script>
-
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-fHqP63+gkY3FsbPVmR8z/DW14hHqL7VqL79ti0MEKnLg1CzF/54zfzGuV1z59uQ8" crossorigin="anonymous"></script>
 </body>
 
 </html>
