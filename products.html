@@ -1,30 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outfit Store</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap"
-        rel="stylesheet">
+    <title>Products - Outfit Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/product.css">
-    <!-- <link rel="stylesheet" href="css/search.css"> -->
-    <link rel="stylesheet" href="css/hero.css">
-
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-    </style>
-
+    <link rel="stylesheet" href="css/search.css">
 </head>
-
 <body>
 
     <!-- Navbar Section -->
@@ -52,42 +37,27 @@
                     <a href="#">Cart<span class="cart-count">3</span></a>
                 </div>
             </div>
-            <!-- Hamburger Icon -->
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
         </nav>
     </header>
 
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="hero-content">
-        <h1>Stay Ahead of Fashion</h1>
-        <p class="hero-subtitle">Discover Trendy, High-Quality Apparel for Every Occasion</p>
-        <div class="cta-buttons">
-            <a href="#shop-now" class="btn btn-primary">Shop Now</a>
-            <a href="#collections" class="btn btn-secondary">Explore Collections</a>
-        </div>
-        <p class="hero-description">
-            Curated styles designed to make you stand out. Explore new arrivals and limited-edition drops.
-        </p>
-        <div class="newsletter">
-            <input type="email" placeholder="Enter your email for exclusive offers" />
-            <button class="btn">Subscribe</button>
-        </div>
-    </div>
-    <div class="hero-image">
-        <img src="/images/download.jpeg" alt="Trendy Fashion Image">
-    </div>
-</section>
+    <!-- Product Filter Section -->
+    <section class="product-filter">
+        <h3>Filter Products</h3>
+        <form>
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="men">Men</option>
+                <option value="women">Women</option>
+            </select>
 
+            <label for="price">Price Range:</label>
+            <input type="range" id="price" name="price" min="0" max="1000" step="10">
+        </form>
+    </section>
 
-    <!-- Featured Products Section -->
+    <!-- Product Section -->
     <section class="product-section">
-        <h2>Featured Products</h2>
+        <h2>Our Products</h2>
         <div class="product-grid">
             <div class="product-item">
                 <img src="img/product1.jpg" alt="Product 1">
@@ -113,13 +83,7 @@
     <!-- Footer Section -->
     <footer>
         <p>&copy; 2024 OutfitStore. All Rights Reserved.</p>
-
-        <!-- Scroll to Top Button -->
-<button class="scroll-to-top" id="scrollToTop">↑</button>
-
     </footer>
 
-    <link rel="stylesheet" href="script.js">
 </body>
-
 </html>

@@ -1,0 +1,254 @@
+/* product.css */
+.product-section {
+    padding: 50px 20px;
+    background-color: #f8f8f8;
+    text-align: center;
+}
+
+.product-section h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: #333;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Product Item Styles */
+.product-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 5px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.product-item:hover img {
+    transform: scale(1.1); /* Zoom effect */
+}
+
+.product-item h3 {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: #333;
+}
+
+.product-item p {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 5px;
+}
+
+.product-item .add-to-cart {
+    background-color: #FF5722;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.product-item .add-to-cart:hover {
+    background-color: #FF7043;
+}
+
+/* Mobile Devices (320px — 480px) */
+@media (max-width: 480px) {
+    .product-section {
+        padding: 30px 10px;
+    }
+
+    .product-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr; /* Single column layout */
+        gap: 15px;
+    }
+
+    .product-item {
+        padding: 15px;
+    }
+
+    .product-item img {
+        height: 200px; /* Smaller image for mobile */
+    }
+
+    .product-item h3 {
+        font-size: 1rem;
+    }
+
+    .product-item p {
+        font-size: 0.9rem;
+    }
+
+    .product-item .add-to-cart {
+        padding: 8px 15px;
+    }
+}
+
+/* Tablets and small screens (481px — 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .product-section {
+        padding: 40px 15px;
+    }
+
+    .product-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* Two column layout */
+        gap: 20px;
+    }
+
+    .product-item {
+        padding: 18px;
+    }
+
+    .product-item img {
+        height: 220px; /* Adjust image height */
+    }
+
+    .product-item h3 {
+        font-size: 1.1rem;
+    }
+
+    .product-item p {
+        font-size: 0.95rem;
+    }
+
+    .product-item .add-to-cart {
+        padding: 9px 18px;
+    }
+}
+
+/* Small screens, laptops (769px — 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .product-section {
+        padding: 50px 20px;
+    }
+
+    .product-section h2 {
+        font-size: 2rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr); /* Three column layout */
+        gap: 20px;
+    }
+
+    .product-item {
+        padding: 20px;
+    }
+
+    .product-item img {
+        height: 250px;
+    }
+
+    .product-item h3 {
+        font-size: 1.2rem;
+    }
+
+    .product-item p {
+        font-size: 1rem;
+    }
+
+    .product-item .add-to-cart {
+        padding: 10px 20px;
+    }
+}
+
+/* Desktops, large screens (1025px — 1200px) */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .product-section {
+        padding: 60px 30px;
+    }
+
+    .product-section h2 {
+        font-size: 2.2rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+
+    .product-item {
+        padding: 22px;
+    }
+
+    .product-item img {
+        height: 260px;
+    }
+
+    .product-item h3 {
+        font-size: 1.3rem;
+    }
+
+    .product-item p {
+        font-size: 1.05rem;
+    }
+
+    .product-item .add-to-cart {
+        padding: 12px 25px;
+    }
+}
+
+/* Extra large screens (1201px and more) */
+@media (min-width: 1201px) {
+    .product-section {
+        padding: 70px 50px;
+    }
+
+    .product-section h2 {
+        font-size: 2.5rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr); /* Four column layout */
+        gap: 30px;
+    }
+
+    .product-item {
+        padding: 25px;
+    }
+
+    .product-item img {
+        height: 280px;
+    }
+
+    .product-item h3 {
+        font-size: 1.4rem;
+    }
+
+    .product-item p {
+        font-size: 1.1rem;
+    }
+
+    .product-item .add-to-cart {
+        padding: 14px 30px;
+    }
+}

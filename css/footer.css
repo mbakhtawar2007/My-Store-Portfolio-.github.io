@@ -1,0 +1,112 @@
+/* footer.css */
+footer {
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    font-size: 1rem;
+    position: relative;
+}
+
+footer p {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+/* Scroll-to-top button */
+.scroll-to-top {
+    background-color: #FF5722;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none; /* Hidden initially */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.scroll-to-top:hover {
+    background-color: #FF7043;
+}
+
+/* Media Queries */
+
+/* Mobile devices: 320px — 480px */
+@media (max-width: 480px) {
+    footer {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+
+    .scroll-to-top {
+        padding: 8px;
+        font-size: 1.2rem;
+        bottom: 10px;
+        right: 10px;
+    }
+}
+
+/* iPads, Tablets: 481px — 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+    footer {
+        padding: 18px;
+        font-size: 1rem;
+    }
+
+    .scroll-to-top {
+        padding: 9px;
+        font-size: 1.3rem;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+
+/* Small screens, laptops: 769px — 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+    footer {
+        padding: 20px;
+        font-size: 1.1rem;
+    }
+
+    .scroll-to-top {
+        padding: 10px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+/* Desktops, large screens: 1025px — 1200px */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    footer {
+        padding: 20px;
+        font-size: 1.1rem;
+    }
+
+    .scroll-to-top {
+        padding: 12px;
+        font-size: 1.7rem;
+        bottom: 30px;
+        right: 30px;
+    }
+}
+
+/* Extra large screens, TV: 1201px and more */
+@media (min-width: 1201px) {
+    footer {
+        padding: 25px;
+        font-size: 1.2rem;
+    }
+
+    .scroll-to-top {
+        padding: 15px;
+        font-size: 2rem;
+        bottom: 40px;
+        right: 40px;
+    }
+}
