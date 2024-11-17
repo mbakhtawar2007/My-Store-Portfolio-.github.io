@@ -4,19 +4,23 @@
     justify-content: space-between;
     align-items: center;
     padding: 120px 40px;
-    background: url('path-to-your-background-image.jpg') center/cover no-repeat, linear-gradient(to bottom right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+    background: url('path-to-your-background-image.jpg') center/cover no-repeat, 
+                linear-gradient(to bottom right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
     color: white;
     min-height: 500px;
     position: relative;
     text-align: center;
-    border-bottom: 3px solid #FF5722; /* Adding a border to distinguish the hero section */
+    border-bottom: 3px solid #FF5722; /* Border for distinction */
     overflow: hidden;
+    animation: fadeIn 1.5s ease-in-out; /* Fade-in for entire section */
+    background-color: #333; /* Fallback background color */
 }
 
 .hero-content {
     max-width: 700px;
     z-index: 10;
     padding: 20px;
+    text-align: center; /* Ensures central alignment across devices */
 }
 
 .hero-content h1 {
@@ -61,12 +65,21 @@
     transform: translateY(-5px);
 }
 
+.cta-buttons .btn:focus {
+    outline: 2px solid #FF5722;
+}
+
+.cta-buttons .btn:active {
+    transform: scale(0.95);
+}
+
 .hero-description {
     font-size: 1.1rem;
     font-family: 'Roboto', sans-serif;
     margin-bottom: 20px;
     opacity: 0.8;
     animation: fadeInUp 2s ease-out;
+    padding: 10px 15px; /* Better readability on smaller devices */
 }
 
 .newsletter {
@@ -105,8 +118,9 @@
 }
 
 .hero-image img {
-    max-width: 100%; /* Ensures the image is responsive */
-    height: auto; /* Maintains the image's aspect ratio */
+    max-width: 100%; /* Responsive */
+    max-height: 450px; /* Prevents excessive stretching */
+    height: auto; /* Maintains aspect ratio */
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     transition: transform 0.5s ease, filter 0.5s ease;
@@ -204,10 +218,6 @@
         flex-direction: row;
     }
 
-    .hero-image img {
-        margin-top: 0;
-    }
-
     .newsletter input {
         width: 250px;
     }
@@ -280,5 +290,14 @@
     100% {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
