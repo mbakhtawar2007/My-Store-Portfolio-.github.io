@@ -1,25 +1,77 @@
+/* Enhanced Product Grid Layout */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid layout */
+    gap: 20px; /* Spacing between grid items */
 }
+
+/* Individual Product Item */
 .product-item {
     text-align: center;
-    border: 1px solid #ddd;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 8px;
+    border: 1px solid #ddd; /* Subtle border */
+    padding: 15px; /* Inner spacing */
+    background-color: #fff; /* Clean white card */
+    border-radius: 8px; /* Rounded corners for softer visuals */
+    animation: fadeIn 0.8s ease-in-out forwards; /* Enhanced fade-in animation */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
 }
+
+.product-item:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Add-to-Cart Button */
 .add-to-cart {
     display: inline-block;
     margin-top: 10px;
-    padding: 10px 15px;
-    background-color: #FF5722;
-    color: white;
+    padding: 10px 15px; /* Button padding */
+    background-color: #FF5722; /* Vibrant button color */
+    color: white; /* Contrasting text color */
     border: none;
-    border-radius: 4px;
-    text-decoration: none;
+    border-radius: 4px; /* Rounded button corners */
+    text-decoration: none; /* Remove underline for links */
+    font-weight: 500; /* Slightly bold text */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
+    animation: fadeIn 1s ease forwards; /* Fade-in for button */
 }
+
 .add-to-cart:hover {
-    background-color: #E64A19;
+    background-color: #E64A19; /* Darker shade for hover */
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* Define Fade-in Animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0; /* Fully transparent */
+        transform: translateY(20px); /* Initial downward offset */
+    }
+    50% {
+        opacity: 0.5; /* Intermediate visibility */
+    }
+    100% {
+        opacity: 1; /* Fully visible */
+        transform: translateY(0); /* Reset position */
+    }
+}
+
+/* Staggered Fade-in for Grid Items */
+.product-grid .product-item:nth-child(odd) {
+    animation-delay: 0.3s; /* Stagger for odd items */
+}
+
+.product-grid .product-item:nth-child(even) {
+    animation-delay: 0.5s; /* Stagger for even items */
+}
+
+/* Footer Styles (Optional for Consistency) */
+footer {
+    margin-top: 50px;
+    padding: 20px 0;
+    background-color: #333; /* Dark footer */
+    color: #fff; /* White text */
+    text-align: center;
+    font-size: 0.9rem; /* Compact footer text */
+    animation: fadeIn 1.5s ease forwards; /* Fade-in for footer */
 }

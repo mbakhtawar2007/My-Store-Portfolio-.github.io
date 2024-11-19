@@ -1,0 +1,41 @@
+/* sale.css, categories.css, shop.css */
+
+/* Define CSS Variables */
+:root {
+    --primary-color: #FF5722;
+    --secondary-color: #FF7043;
+    --background-color: #f9f9f9;
+    --text-color: #333;
+    --muted-text-color: #666;
+}
+
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+}
+
+/* Buttons */
+.add-to-cart, .view-category {
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.add-to-cart:hover, .view-category:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+/* Product Item Hover Effect */
+.product-item:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+    .product-item img {
+        height: 150px; /* Adjust image height for mobile */
+    }
+}

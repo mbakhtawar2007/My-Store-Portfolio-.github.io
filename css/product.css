@@ -28,6 +28,7 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    animation: fadeIn 0.5s ease forwards; /* Add animation */
 }
 
 .product-item:hover {
@@ -251,4 +252,19 @@
     .product-item .add-to-cart {
         padding: 14px 30px;
     }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-item {
+    animation: fadeIn 0.5s ease forwards; /* Add animation */
 }

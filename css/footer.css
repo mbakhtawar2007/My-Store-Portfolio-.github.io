@@ -1,4 +1,5 @@
-/* footer.css */
+/* Enhanced footer.css */
+
 footer {
     background-color: #111;
     color: #fff;
@@ -6,6 +7,7 @@ footer {
     padding: 20px;
     font-size: 1rem;
     position: relative;
+    animation: fadeIn 1s ease-in-out forwards; /* Fade-in for footer */
 }
 
 footer p {
@@ -27,11 +29,13 @@ footer p {
     right: 20px;
     display: none; /* Hidden initially */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+    animation: fadeIn 0.8s ease forwards; /* Fade-in animation when shown */
 }
 
 .scroll-to-top:hover {
-    background-color: #FF7043;
+    background-color: #FF7043; /* Hover color change */
+    transform: scale(1.1); /* Slight zoom on hover */
 }
 
 /* Media Queries */
@@ -108,5 +112,29 @@ footer p {
         font-size: 2rem;
         bottom: 40px;
         right: 40px;
+    }
+}
+
+/* Fade-in Animation for Elements */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Additional Animation for Scroll-to-top Visibility */
+@keyframes buttonFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
     }
 }

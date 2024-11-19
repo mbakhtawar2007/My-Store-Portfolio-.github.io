@@ -1,8 +1,18 @@
 /* Global Styles */
+:root {
+    --primary-color: #FF5722;
+    --secondary-color: #111;
+    --text-color: #ffffff;
+    --hover-color: #FF7043;
+    --bg-color: #f8f9fa;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 /* Navbar Styles */
@@ -11,16 +21,17 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
-    background-color: #111;
+    background-color: var(--secondary-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .navbar-left .logo {
     font-size: 1.8rem;
-    color: #fff;
+    color: var(--text-color);
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     text-decoration: none;
@@ -31,6 +42,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .navbar-center ul li {
@@ -38,7 +50,7 @@ body {
 }
 
 .navbar-center ul li a {
-    color: #fff;
+    color: var(--text-color);
     font-size: 1rem;
     text-decoration: none;
     font-weight: 400;
@@ -46,7 +58,13 @@ body {
 }
 
 .navbar-center ul li a:hover {
-    color: #FF5722;
+    color: var(--primary-color);
+}
+
+.navbar-center ul li a.active {
+    color: var(--primary-color);
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .navbar-right {
@@ -55,6 +73,11 @@ body {
 }
 
 /* Search Bar Styles */
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
 .search-bar input {
     padding: 10px;
     border-radius: 5px;
@@ -64,37 +87,43 @@ body {
     transition: width 0.3s ease;
 }
 
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
 .search-bar button {
-    background-color: #FF5722;
+    background-color: var(--primary-color);
     padding: 10px 15px;
     border-radius: 5px;
     border: none;
     cursor: pointer;
     font-size: 1rem;
-    color: white;
+    color: var(--text-color);
     transition: background-color 0.3s;
 }
 
 .search-bar button:hover {
-    background-color: #FF7043;
+    background-color: var(--hover-color);
 }
 
 /* User Cart Styles */
 .user-cart a {
-    color: #fff;
+    color: var(--text-color);
     margin-left: 15px;
     text-decoration: none;
     font-size: 1rem;
     position: relative;
+    transition: color 0.3s;
 }
 
 .user-cart a:hover {
-    color: #FF5722;
+    color: var(--primary-color);
 }
 
 .cart-count {
-    background-color: #FF5722;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-color);
     padding: 3px 8px;
     border-radius: 50%;
     font-size: 0.8rem;
@@ -111,10 +140,11 @@ body {
     width: 30px;
     height: 20px;
     cursor: pointer;
+    aria-label: "Toggle navigation menu";
 }
 
 .hamburger span {
-    background-color: #fff;
+    background-color: var(--text-color);
     height: 3px;
     width: 100%;
     transition: transform 0.3s ease;
@@ -172,6 +202,10 @@ body {
 
 /* Tablets and Small Screens (481px — 768px) */
 @media (min-width: 481px) and (max-width: 768px) {
+    .navbar {
+        flex-direction: row;
+    }
+
     .navbar-center ul {
         display: none;
         flex-direction: row;
@@ -195,7 +229,7 @@ body {
     }
 }
 
-/* Small Screens, Laptops (769px — 1024px) */
+/* Laptops (769px — 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
     .navbar-center ul {
         display: flex;
@@ -214,19 +248,8 @@ body {
     }
 }
 
-/* Desktops, Large Screens (1025px — 1200px) */
-@media (min-width: 1025px) and (max-width: 1200px) {
-    .navbar-center ul li {
-        margin: 0 25px;
-    }
-
-    .search-bar input {
-        width: 280px;
-    }
-}
-
-/* Extra Large Screens (1201px and more) */
-@media (min-width: 1201px) {
+/* Desktops (1025px and above) */
+@media (min-width: 1025px) {
     .navbar {
         padding: 15px 50px;
     }
@@ -237,5 +260,16 @@ body {
 
     .search-bar input {
         width: 300px;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
