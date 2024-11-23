@@ -1,36 +1,44 @@
-/* hero.css */
+/* Global Variables */
+:root {
+    --primary-color: #FF5722;
+    --hover-color: #FF7043;
+    --text-color: white;
+    --fallback-bg: #333;
+    --gradient-bg: linear-gradient(to bottom right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+    --border-radius: 25px;
+}
+
+/* Hero Section */
 .hero-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 120px 40px;
-    background: url('path-to-your-background-image.jpg') center/cover no-repeat, 
-                linear-gradient(to bottom right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
-    color: white;
+    background: var(--gradient-bg), url('path-to-your-background-image.jpg') center/cover no-repeat;
+    color: var(--text-color);
     min-height: 500px;
-    position: relative;
     text-align: center;
-    border-bottom: 3px solid #FF5722; /* Border for distinction */
+    border-bottom: 3px solid var(--primary-color);
+    position: relative;
     overflow: hidden;
-    animation: fadeIn 1.5s ease-in-out; /* Fade-in for entire section */
-    background-color: #333; /* Fallback background color */
+    background-color: var(--fallback-bg); /* Fallback background color */
+    animation: fadeIn 1.5s ease-in-out;
 }
 
 .hero-content {
     max-width: 700px;
-    z-index: 10;
-    padding: 20px;
-    text-align: center; /* Ensures central alignment across devices */
+    z-index: 1;
+    text-align: center;
+    margin: auto;
 }
 
 .hero-content h1 {
     font-size: 3.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 2px;
     line-height: 1.3;
     text-transform: uppercase;
+    margin-bottom: 20px;
     animation: fadeInUp 1s ease-out;
 }
 
@@ -50,10 +58,10 @@
 
 .cta-buttons .btn {
     padding: 15px 30px;
-    background-color: #FF5722;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-color);
     text-decoration: none;
-    border-radius: 25px;
+    border-radius: var(--border-radius);
     font-size: 1.1rem;
     font-family: 'Roboto', sans-serif;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -61,12 +69,12 @@
 }
 
 .cta-buttons .btn:hover {
-    background-color: #FF7043;
+    background-color: var(--hover-color);
     transform: translateY(-5px);
 }
 
 .cta-buttons .btn:focus {
-    outline: 2px solid #FF5722;
+    outline: 2px solid var(--primary-color);
 }
 
 .cta-buttons .btn:active {
@@ -79,7 +87,7 @@
     margin-bottom: 20px;
     opacity: 0.8;
     animation: fadeInUp 2s ease-out;
-    padding: 10px 15px; /* Better readability on smaller devices */
+    padding: 10px 15px;
 }
 
 .newsletter {
@@ -93,34 +101,33 @@
     padding: 12px;
     font-size: 1rem;
     border: 1px solid #ccc;
-    border-radius: 25px;
+    border-radius: var(--border-radius);
     width: 250px;
-    outline: none;
     transition: border 0.3s ease;
 }
 
 .newsletter input:focus {
-    border-color: #FF5722;
+    border-color: var(--primary-color);
 }
 
 .newsletter button {
     padding: 12px 25px;
-    background-color: #FF5722;
-    color: white;
-    border-radius: 25px;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border-radius: var(--border-radius);
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .newsletter button:hover {
-    background-color: #FF7043;
+    background-color: var(--hover-color);
 }
 
 .hero-image img {
-    max-width: 100%; /* Responsive */
-    max-height: 450px; /* Prevents excessive stretching */
-    height: auto; /* Maintains aspect ratio */
+    max-width: 100%;
+    max-height: 450px;
+    height: auto;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     transition: transform 0.5s ease, filter 0.5s ease;
@@ -281,7 +288,7 @@
     }
 }
 
-/* Fade-in Animation for Elements */
+/* Fade-in Animations */
 @keyframes fadeInUp {
     0% {
         opacity: 0;
@@ -299,5 +306,13 @@
     }
     100% {
         opacity: 1;
+    }
+}
+
+/* Reduce Motion for Users who Prefer Less Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
     }
 }

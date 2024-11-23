@@ -34,61 +34,59 @@
     <!-- Navbar Section -->
     <header>
         <nav class="navbar">
-            <div class="navbar-left">
-                <a href="#" class="logo">OutfitStore</a>
-            </div>
+            <a href="#" class="logo" aria-label="OutfitStore Home">OutfitStore</a>
             <div class="navbar-center">
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="./shop.html">Shop</a></li>
-                    <li><a href="./sale.html">Sale</a></li>
-                    <li><a href="./Categories.html">Categories</a></li>
-                    <li><a href="./contact.html">Contact</a></li>
+                    <li><a href="index.html" class="active" aria-label="Go to Home">Home</a></li>
+                    <li><a href="shop.html" aria-label="Go to Shop">Shop</a></li>
+                    <li><a href="sale.html" aria-label="Go to Sale">Sale</a></li>
+                    <li><a href="categories.html" aria-label="Go to Categories">Categories</a></li>
+                    <li><a href="contact.html" aria-label="Go to Contact">Contact</a></li>
                 </ul>
             </div>
             <div class="navbar-right">
                 <div class="search-bar">
                     <input type="text" placeholder="Search products..." aria-label="Search products">
                     <button aria-label="Search">Search</button>
-
                 </div>
                 <div class="user-cart">
-                    <a href="#">Login</a>
-                    <a href="#">Cart<span class="cart-count">3</span></a>
+                    <a href="login.html" aria-label="Login">Login</a>
+                    <a href="cart.html" aria-label="View Cart">Cart <span class="cart-count"
+                            aria-hidden="true">3</span></a>
                 </div>
             </div>
-            <!-- Hamburger Icon -->
-            <div class="hamburger" id="hamburger">
+            <div class="hamburger" id="hamburger" aria-label="Toggle Menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-
         </nav>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero-section">
+    <header class="hero-section">
         <div class="hero-content">
             <h1>Stay Ahead of Fashion</h1>
             <p class="hero-subtitle">Discover Trendy, High-Quality Apparel for Every Occasion</p>
             <div class="cta-buttons">
-                <a href="#shop-now" class="btn btn-primary">Shop Now</a>
-                <a href="#collections" class="btn btn-secondary">Explore Collections</a>
+                <a href="#shop-now" class="btn btn-primary" aria-label="Shop Now">Shop Now</a>
+                <a href="#collections" class="btn btn-secondary" aria-label="Explore Collections">Explore
+                    Collections</a>
             </div>
             <p class="hero-description">
                 Curated styles designed to make you stand out. Explore new arrivals and limited-edition drops.
             </p>
             <div class="newsletter">
-                <input type="email" placeholder="Enter your email for exclusive offers" />
-                <button class="btn">Subscribe</button>
+                <label for="email-input" class="visually-hidden">Subscribe to our newsletter</label>
+                <input id="email-input" type="email" placeholder="Your email address" aria-label="Enter your email">
+                <button class="btn" aria-label="Subscribe to newsletter">Subscribe</button>
             </div>
         </div>
         <div class="hero-image">
-            <img src="images/download.jpeg" alt="Trendy Fashion Image">
-
+            <img src="images/download.jpeg" alt="Model showcasing trendy fashion">
         </div>
-    </section>
+    </header>
+
 
 
     <!-- Featured Products Section -->
@@ -96,34 +94,35 @@
         <h2>Featured Products</h2>
         <div class="product-grid">
             <div class="product-item">
-                <img src="img/product1.jpg" alt="Stylish Men's Jacket">
+                <img src="img/product1.jpg" alt="Men's blue jacket with zippered front">
                 <h3>Men's Jacket</h3>
                 <p>$29.99</p>
-                <a href="#" class="add-to-cart">Add to Cart</a>
+                <a href="#" class="add-to-cart" title="Add Men's Jacket to cart">Add to Cart</a>
             </div>
             <div class="product-item">
-                <img src="img/product2.jpg" alt="Elegant Women's Dress">
+                <img src="img/product2.jpg" alt="Elegant Women's red dress with a fitted waist">
                 <h3>Women's Dress</h3>
                 <p>$49.99</p>
-                <a href="#" class="add-to-cart">Add to Cart</a>
+                <a href="#" class="add-to-cart" title="Add Women's Dress to cart">Add to Cart</a>
             </div>
             <div class="product-item">
-                <img src="img/product3.jpg" alt="Durable Leather Shoes">
+                <img src="img/product3.jpg" alt="Durable leather shoes in brown color">
                 <h3>Leather Shoes</h3>
                 <p>$69.99</p>
-                <a href="#" class="add-to-cart">Add to Cart</a>
+                <a href="#" class="add-to-cart" title="Add Leather Shoes to cart">Add to Cart</a>
             </div>
         </div>
     </section>
 
+
     <!-- Footer Section -->
-    <footer>
-        <p>&copy; 2024 OutfitStore. All Rights Reserved.</p>
+<footer>
+    <p>&copy; 2024 OutfitStore. All Rights Reserved.</p>
 
-        <!-- Scroll to Top Button -->
-        <button class="scroll-to-top" id="scrollToTop">↑</button>
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" title="Scroll to Top">↑</button>
+</footer>
 
-    </footer>
 
     <script src="script.js" defer></script>
 

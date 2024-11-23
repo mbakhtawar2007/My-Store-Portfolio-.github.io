@@ -3,19 +3,24 @@
 // Utility function to update cart count
 function updateCartCount() {
     const cartCount = document.querySelector('.cart-count');
-    let currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
+    const currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
     cartCount.textContent = currentCount;
+}
+
+// Function to handle adding items to the cart
+function addToCart() {
+    let currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
+    currentCount += 1;
+    localStorage.setItem('cartCount', currentCount);
+    updateCartCount();
+    alert('Item added to cart!');
 }
 
 // Handle Add to Cart button click
 document.addEventListener('click', (event) => {
     if (event.target.classList.contains('add-to-cart')) {
         event.preventDefault(); // Prevent page refresh
-        let currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
-        currentCount += 1;
-        localStorage.setItem('cartCount', currentCount);
-        updateCartCount();
-        alert('Item added to cart!');
+        addToCart();
     }
 });
 
@@ -24,16 +29,20 @@ window.addEventListener('DOMContentLoaded', updateCartCount);
 
 // Toggle the navbar menu on mobile
 const hamburger = document.getElementById('hamburger');
-const navbar = document.querySelector('.navbar');
+const navbarMenu = document.querySelector('.navbar-center ul');
 
 hamburger.addEventListener('click', () => {
-    navbar.classList.toggle('active');
+    const isActive = navbarMenu.classList.toggle('active');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', isActive);
 });
 
 // Close navbar when a link is clicked on mobile
 document.querySelectorAll('.navbar a').forEach(link => {
     link.addEventListener('click', () => {
-        navbar.classList.remove('active');
+        navbarMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
     });
 });
 
@@ -63,5 +72,6 @@ const filterProducts = () => {
     });
 };
 
+// Add event listeners for filtering
 document.getElementById('category').addEventListener('change', filterProducts);
 document.getElementById('price').addEventListener('input', filterProducts);
