@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cart - Outfit Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../css/shop.css" />
+</head>
+<body>
+    <!-- Navbar Section -->
+    <header>
+        <nav class="navbar">
+            <div class="navbar-left">
+                <a href="#" class="logo">OutfitStore</a>
+            </div>
+            <div class="navbar-center">
+                <ul>
+                    <li><a href="../html/index.html">Home</a></li>
+                    <li><a href="../html/shop.html">Shop</a></li>
+                    <li><a href="../html/sale.html">Sale</a></li>
+                    <li><a href="../html/Categories.html">Categories</a></li>
+                    <li><a href="../html/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="navbar-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search products..." aria-label="Search products" />
+                    <button aria-label="Search">Search</button>
+                </div>
+                <div class="user-cart">
+                    <a href="#">Login</a>
+                    <a href="#">Cart<span class="cart-count">3</span></a>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger" aria-label="Toggle Menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Cart Section -->
+    <main class="product-section">
+        <h2>Your Shopping Cart</h2>
+        <div class="cart-items">
+            <p>Your cart is currently empty.</p>
+            <!-- Future enhancement: dynamically list cart items here -->
+        </div>
+        <div class="cart-summary">
+            <p>Total: $0.00</p>
+            <button class="btn btn-primary" disabled>Proceed to Checkout</button>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 OutfitStore. All Rights Reserved.</p>
+        <!-- Scroll to Top Button -->
+        <button class="scroll-to-top" id="scrollToTop" title="Scroll to Top">↑</button>
+    </footer>
+
+    <script src="../script.js" defer></script>
+</body>
+</html>

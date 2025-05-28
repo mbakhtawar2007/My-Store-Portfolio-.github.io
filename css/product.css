@@ -283,3 +283,67 @@ body {
         transform: translateY(0);
     }
 }
+
+/* Accessories category specific styles */
+.product-item[data-category="accessories"] {
+    border: 2px solid #4CAF50; /* Green border for accessories */
+    background-color: #e8f5e9; /* Light green background */
+}
+
+/* Product Filter Section */
+.product-filter {
+    padding: 30px 20px;
+    background-color: #f0f0f0;
+    margin-bottom: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.product-filter h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.product-filter form {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.product-filter label {
+    font-weight: 500;
+    color: #555;
+}
+
+.product-filter select,
+.product-filter input[type="range"] {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.product-filter select:focus,
+.product-filter input[type="range"]:focus {
+    outline: none;
+    border-color: #FF5722;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .product-filter form {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .product-filter select,
+    .product-filter input[type="range"] {
+        width: 100%;
+    }
+}

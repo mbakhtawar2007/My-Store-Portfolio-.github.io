@@ -24,9 +24,27 @@ document.addEventListener('click', (event) => {
     }
 });
 
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
 // On page load, set the cart count from localStorage
 window.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
+
+    // Set category filter dropdown based on URL query parameter
+    const categoryParam = getQueryParam('category');
+    const categorySelect = document.getElementById('category');
+    if (categoryParam && categorySelect) {
+        const optionExists = Array.from(categorySelect.options).some(
+            option => option.value === categoryParam
+        );
+        if (optionExists) {
+            categorySelect.value = categoryParam;
+        }
+    }
+
     filterProducts(); // Initialize filter on page load
     setupContactForm(); // Setup contact form handler
     setupSearchBar(); // Setup enhanced search bar
