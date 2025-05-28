@@ -1,17 +1,38 @@
 // script.js
 
+/* Updated script.js with dynamic cart item management */
+
 // Utility function to update cart count
 function updateCartCount() {
     const cartCount = document.querySelector('.cart-count');
-    const currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
-    cartCount.textContent = currentCount;
+    const cart = getCartItems();
+    const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (cartCount) {
+        cartCount.textContent = totalCount;
+    }
 }
 
-// Function to handle adding items to the cart
-function addToCart() {
-    let currentCount = parseInt(localStorage.getItem('cartCount')) || 0;
-    currentCount += 1;
-    localStorage.setItem('cartCount', currentCount);
+// Get cart items from localStorage
+function getCartItems() {
+    const cart = localStorage.getItem('cartItems');
+    return cart ? JSON.parse(cart) : [];
+}
+
+// Save cart items to localStorage
+function saveCartItems(cart) {
+    localStorage.setItem('cartItems', JSON.stringify(cart));
+}
+
+// Add item to cart with product details
+function addToCart(product) {
+    let cart = getCartItems();
+    const existingItemIndex = cart.findIndex(item => item.id === product.id);
+    if (existingItemIndex !== -1) {
+        cart[existingItemIndex].quantity += 1;
+    } else {
+        cart.push({...product, quantity: 1});
+    }
+    saveCartItems(cart);
     updateCartCount();
     alert('Item added to cart!');
 }
@@ -20,7 +41,15 @@ function addToCart() {
 document.addEventListener('click', (event) => {
     if (event.target.classList.contains('add-to-cart')) {
         event.preventDefault(); // Prevent page refresh
-        addToCart();
+        const productElement = event.target.closest('.product-item');
+        if (!productElement) return;
+        const product = {
+            id: productElement.querySelector('h3')?.textContent || '',
+            name: productElement.querySelector('h3')?.textContent || '',
+            price: parseFloat(productElement.querySelector('p')?.textContent.replace('$', '')) || 0,
+            image: productElement.querySelector('img')?.src || ''
+        };
+        addToCart(product);
     }
 });
 
