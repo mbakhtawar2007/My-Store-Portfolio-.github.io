@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - Outfit Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/navbar.css">
-    <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/contact.css">
-    <link rel="stylesheet" href="css/product.css">
-    <!-- <link rel="stylesheet" href="css/product.css"> -->
-    <!-- <link rel="stylesheet" href="css/search.css"> -->
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact - Outfit Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link rel="stylesheet" href="css/contact.css" />
 </head>
 <body>
-
     <!-- Navbar Section -->
     <header>
         <nav class="navbar">
@@ -24,122 +19,57 @@
             <div class="navbar-center">
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="./shop.html">Shop</a></li>
-                    <li><a href="./sale.html">Sale</a></li>
-                    <li><a href="./Categories.html">Categories</a></li>
-                    <li><a href="./contact.html">Contact</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="sale.html">Sale</a></li>
+                    <li><a href="Categories.html">Categories</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
                 </ul>
             </div>
             <div class="navbar-right">
                 <div class="search-bar">
-                    <input type="text" placeholder="Search products..." aria-label="Search products">
+                    <input type="text" placeholder="Search products..." aria-label="Search products" />
                     <button aria-label="Search">Search</button>
-
                 </div>
                 <div class="user-cart">
                     <a href="#">Login</a>
                     <a href="#">Cart<span class="cart-count">3</span></a>
                 </div>
             </div>
-            <!-- Hamburger Icon -->
-            <div class="hamburger" id="hamburger">
+            <div class="hamburger" id="hamburger" aria-label="Toggle Menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-
         </nav>
     </header>
 
-    <!-- Product Filter Section -->
-    <section class="product-filter">
-        <h3>Filter Products</h3>
-        <form>
-            <label for="category">Category:</label>
-            <select id="category" name="category">
-                <option value="all">All</option>
-                <option value="men">Men</option>
-                <option value="women">Women</option>
-                <option value="accessories">Accessories</option>
-                <option value="footwear">Footwear</option>
-            </select>
+    <!-- Contact Section -->
+    <main class="contact-section">
+        <h2>Contact Us</h2>
+        <form id="contactForm" action="#" method="post" novalidate>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your full name" required />
 
-            <label for="price">Price Range:</label>
-            <input type="range" id="price" name="price" min="0" max="1000" step="10" value="1000" aria-label="Price Range">
-            <span id="priceValue">$1000</span>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Your email address" required />
+
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Subject" required />
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Your message" rows="5" required></textarea>
+
+            <button type="submit" class="btn btn-primary">Send Message</button>
         </form>
-    </section>
-
-    <!-- Product Section -->
-    <section class="product-section">
-        <h2>Our Products</h2>
-        <div class="product-grid">
-            <div class="product-item" data-category="men" data-price="29.99">
-                <img src="img/product1.jpg" alt="Stylish Men's Jacket">
-                <h3>Men's Jacket</h3>
-                <p>$29.99</p>
-                <a href="#" class="add-to-cart">Add to Cart</a>
-            </div>
-            <div class="product-item" data-category="women" data-price="49.99">
-                <img src="img/product2.jpg" alt="Elegant Women's Dress">
-                <h3>Women's Dress</h3>
-                <p>$49.99</p>
-                <a href="#" class="add-to-cart">Add to Cart</a>
-            </div>
-            <div class="product-item" data-category="footwear" data-price="69.99">
-                <img src="img/product3.jpg" alt="Durable Leather Shoes">
-                <h3>Leather Shoes</h3>
-                <p>$69.99</p>
-                <a href="#" class="add-to-cart">Add to Cart</a>
-            </div>
-            <!-- Add more product items as needed -->
-        </div>
-    </section>
+    </main>
 
     <!-- Footer Section -->
     <footer>
         <p>&copy; 2024 OutfitStore. All Rights Reserved.</p>
+        <!-- Scroll to Top Button -->
+        <button class="scroll-to-top" id="scrollToTop" title="Scroll to Top">↑</button>
     </footer>
 
     <script src="script.js" defer></script>
-    <script>
-        // Get references to the filter form elements
-        const categorySelect = document.getElementById('category');
-        const priceRange = document.getElementById('price');
-        const priceValue = document.getElementById('priceValue');
-        const productItems = document.querySelectorAll('.product-item');
-
-        // Update price value text
-        priceRange.addEventListener('input', function() {
-            priceValue.textContent = `$${priceRange.value}`;
-        });
-
-        // Filter products based on category and price
-        function filterProducts() {
-            const selectedCategory = categorySelect.value;
-            const selectedPrice = parseFloat(priceRange.value);
-
-            productItems.forEach(item => {
-                const itemCategory = item.getAttribute('data-category');
-                const itemPrice = parseFloat(item.getAttribute('data-price'));
-
-                if (
-                    (selectedCategory === 'all' || selectedCategory === itemCategory) &&
-                    itemPrice <= selectedPrice
-                ) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        // Add event listeners for filtering
-        categorySelect.addEventListener('change', filterProducts);
-        priceRange.addEventListener('input', filterProducts);
-
-        // Initialize filter on page load
-        filterProducts();
-    </script>
 </body>
 </html>

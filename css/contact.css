@@ -1,77 +1,111 @@
-/* Enhanced Product Grid Layout */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid layout */
-    gap: 20px; /* Spacing between grid items */
+/* New styles for Contact Page */
+
+.contact-section {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* Individual Product Item */
-.product-item {
+.contact-section h2 {
     text-align: center;
-    border: 1px solid #ddd; /* Subtle border */
-    padding: 15px; /* Inner spacing */
-    background-color: #fff; /* Clean white card */
-    border-radius: 8px; /* Rounded corners for softer visuals */
-    animation: fadeIn 0.8s ease-in-out forwards; /* Enhanced fade-in animation */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: #333;
 }
 
-.product-item:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+.contact-section form {
+    display: flex;
+    flex-direction: column;
 }
 
-/* Add-to-Cart Button */
-.add-to-cart {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 15px; /* Button padding */
-    background-color: #FF5722; /* Vibrant button color */
-    color: white; /* Contrasting text color */
+.contact-section label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.contact-section input[type="text"],
+.contact-section input[type="email"],
+.contact-section textarea {
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+.contact-section input[type="text"]:focus,
+.contact-section input[type="email"]:focus,
+.contact-section textarea:focus {
+    border-color: #FF5722;
+    outline: none;
+}
+
+.contact-section button.btn-primary {
+    background-color: #FF5722;
+    color: white;
+    padding: 12px 20px;
     border: none;
-    border-radius: 4px; /* Rounded button corners */
-    text-decoration: none; /* Remove underline for links */
-    font-weight: 500; /* Slightly bold text */
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
-    animation: fadeIn 1s ease forwards; /* Fade-in for button */
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.add-to-cart:hover {
-    background-color: #E64A19; /* Darker shade for hover */
-    transform: scale(1.05); /* Slight zoom on hover */
+.contact-section button.btn-primary:hover {
+    background-color: #E64A19;
 }
 
-/* Define Fade-in Animation */
-@keyframes fadeIn {
-    0% {
-        opacity: 0; /* Fully transparent */
-        transform: translateY(20px); /* Initial downward offset */
+/* Responsive Media Queries */
+
+@media (max-width: 575.98px) {
+    .contact-section {
+        margin: 20px 10px;
+        padding: 0 10px;
     }
-    50% {
-        opacity: 0.5; /* Intermediate visibility */
+
+    .contact-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
     }
-    100% {
-        opacity: 1; /* Fully visible */
-        transform: translateY(0); /* Reset position */
+
+    .contact-section input[type="text"],
+    .contact-section input[type="email"],
+    .contact-section textarea {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+
+    .contact-section button.btn-primary {
+        font-size: 1rem;
+        padding: 10px 15px;
     }
 }
 
-/* Staggered Fade-in for Grid Items */
-.product-grid .product-item:nth-child(odd) {
-    animation-delay: 0.3s; /* Stagger for odd items */
-}
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .contact-section {
+        margin: 30px 15px;
+        padding: 0 15px;
+    }
 
-.product-grid .product-item:nth-child(even) {
-    animation-delay: 0.5s; /* Stagger for even items */
-}
+    .contact-section h2 {
+        font-size: 2rem;
+    }
 
-/* Footer Styles (Optional for Consistency) */
-footer {
-    margin-top: 50px;
-    padding: 20px 0;
-    background-color: #333; /* Dark footer */
-    color: #fff; /* White text */
-    text-align: center;
-    font-size: 0.9rem; /* Compact footer text */
-    animation: fadeIn 1.5s ease forwards; /* Fade-in for footer */
+    .contact-section input[type="text"],
+    .contact-section input[type="email"],
+    .contact-section textarea {
+        font-size: 1rem;
+        padding: 9px 11px;
+    }
+
+    .contact-section button.btn-primary {
+        font-size: 1.05rem;
+        padding: 11px 18px;
+    }
 }
