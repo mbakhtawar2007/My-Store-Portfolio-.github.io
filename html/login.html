@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login - Outfit Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet" />
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/footer.css" />
     <link rel="stylesheet" href="../css/contact.css" />
 </head>
+
 <body>
     <!-- Navbar Section -->
     <header>
@@ -31,8 +35,9 @@
                     <button aria-label="Search">Search</button>
                 </div>
                 <div class="user-cart">
-                    <a href="#">Login</a>
-                    <a href="#">Cart<span class="cart-count">3</span></a>
+                    <a href="login.html" aria-label="Login">Login</a>
+                    <a href="cart.html" aria-label="View Cart">Cart <span class="cart-count"
+                            aria-hidden="true">3</span></a>
                 </div>
             </div>
             <div class="hamburger" id="hamburger" aria-label="Toggle Menu" aria-expanded="false">
@@ -53,6 +58,8 @@
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Your password" required />
 
+            <!-- TODO: Integrate backend login authentication here -->
+
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
     </main>
@@ -66,4 +73,5 @@
 
     <script src="../script.js" defer></script>
 </body>
+
 </html>

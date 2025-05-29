@@ -62,6 +62,18 @@ function getQueryParam(param) {
 window.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
 
+    // Render cart items if on cart page
+    if (document.querySelector('.cart-items')) {
+        renderCart();
+
+        const checkoutBtn = document.getElementById('checkout-btn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', () => {
+                alert('Checkout functionality is not implemented yet.');
+            });
+        }
+    }
+
     // Set category filter dropdown based on URL query parameter
     const categoryParam = getQueryParam('category');
     const categorySelect = document.getElementById('category');
