@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/footer.css" />
     <link rel="stylesheet" href="../css/shop.css" />
+    <link rel="stylesheet" href="../css/cart.css" />
 </head>
 <body>
     <!-- Navbar Section -->
@@ -31,7 +32,6 @@
                     <button aria-label="Search">Search</button>
                 </div>
                 <div class="user-cart">
-                    <a href="login.html" aria-label="Login">Login</a>
                     <a href="cart.html" aria-label="View Cart">Cart <span class="cart-count"
                             aria-hidden="true">3</span></a>
                 </div>
@@ -50,8 +50,71 @@
         <div class="cart-items">
             <!-- Cart items will be dynamically inserted here -->
         </div>
+
+        <!-- Price Breakdown -->
+        <section class="price-breakdown">
+            <h3>Price Breakdown</h3>
+            <p>Items Total: $<span id="items-total">0.00</span></p>
+            <p>Taxes: $<span id="taxes">0.00</span></p>
+            <p>Shipping: $<span id="shipping-cost">0.00</span></p>
+            <p>Discount: -$<span id="discount">0.00</span></p>
+            <hr />
+            <p><strong>Grand Total: $<span id="cart-total">0.00</span></strong></p>
+        </section>
+
+        <!-- Coupon Code Entry -->
+        <section class="coupon-section">
+            <label for="coupon-code">Have a coupon?</label>
+            <input type="text" id="coupon-code" placeholder="Enter coupon code" />
+            <button id="apply-coupon-btn" class="btn btn-secondary">Apply</button>
+            <p id="coupon-message" class="coupon-message"></p>
+        </section>
+
+        <!-- Checkout Options -->
+        <section class="checkout-options">
+            <h3>Checkout Options</h3>
+            <label>
+                <input type="checkbox" id="guest-checkout" checked />
+                Checkout as Guest
+            </label>
+            <div class="payment-methods">
+                <p>Select Payment Method:</p>
+                <label><input type="radio" name="payment" value="credit-card" checked /> Credit/Debit Card</label>
+                <label><input type="radio" name="payment" value="digital-wallet" /> Digital Wallet</label>
+                <label><input type="radio" name="payment" value="local-payment" /> Local Payment</label>
+            </div>
+            <div class="shipping-estimation">
+                <label for="shipping-zip">Enter ZIP/Postal Code for Shipping Estimation:</label>
+                <input type="text" id="shipping-zip" placeholder="ZIP/Postal Code" />
+                <button id="estimate-shipping-btn" class="btn btn-secondary">Estimate Shipping</button>
+                <p id="shipping-estimate-message"></p>
+            </div>
+        </section>
+
+        <!-- Trust Signals -->
+        <section class="trust-signals">
+            <h3>Why Shop With Us?</h3>
+            <ul>
+                <li>Secure Payment Processing</li>
+                <li>Trusted by Thousands of Customers</li>
+                <li>Fast and Reliable Shipping</li>
+                <li>Easy Returns and Exchanges</li>
+            </ul>
+        </section>
+
+        <!-- Progress Indicators -->
+        <section class="checkout-progress">
+            <h3>Checkout Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-step active">Cart</div>
+                <div class="progress-step">Shipping</div>
+                <div class="progress-step">Payment</div>
+                <div class="progress-step">Review</div>
+                <div class="progress-step">Complete</div>
+            </div>
+        </section>
+
         <div class="cart-summary">
-            <p>Total: $<span id="cart-total">0.00</span></p>
             <button class="btn btn-primary" id="checkout-btn" disabled>Proceed to Checkout</button>
         </div>
     </main>

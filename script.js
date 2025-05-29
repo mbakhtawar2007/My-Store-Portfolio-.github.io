@@ -53,6 +53,17 @@ document.addEventListener('click', (event) => {
     }
 });
 
+// Redirect to products.html?category on product card click except when clicking Add to Cart
+document.addEventListener('click', (event) => {
+    const productItem = event.target.closest('.product-item');
+    if (productItem && !event.target.classList.contains('add-to-cart')) {
+        const category = productItem.getAttribute('data-category');
+        if (category) {
+            window.location.href = `products.html?category=${encodeURIComponent(category)}`;
+        }
+    }
+});
+
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -254,3 +265,194 @@ function setupContactForm() {
         contactForm.reset();
     });
 }
+
+// Render cart items dynamically on the cart page
+function renderCart() {
+    const cartItemsContainer = document.querySelector('.cart-items');
+    const cartTotalElement = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const itemsTotalElement = document.getElementById('items-total');
+    const taxesElement = document.getElementById('taxes');
+    const shippingCostElement = document.getElementById('shipping-cost');
+    const discountElement = document.getElementById('discount');
+    const couponMessage = document.getElementById('coupon-message');
+
+    if (!cartItemsContainer || !cartTotalElement || !checkoutBtn || !itemsTotalElement || !taxesElement || !shippingCostElement || !discountElement) return;
+
+    const cart = getCartItems();
+
+    // Clear existing items
+    cartItemsContainer.innerHTML = '';
+    couponMessage.textContent = '';
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+        itemsTotalElement.textContent = '0.00';
+        taxesElement.textContent = '0.00';
+        shippingCostElement.textContent = '0.00';
+        discountElement.textContent = '0.00';
+        cartTotalElement.textContent = '0.00';
+        checkoutBtn.disabled = true;
+        updateCartCount();
+        return;
+    }
+
+    // Create cart item elements
+    cart.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+
+        // Stock alert if stock is low (less than 5)
+        const stockAlert = item.stock !== undefined && item.stock < 5 ? `<p class="stock-alert">Only ${item.stock} left in stock!</p>` : '';
+
+        // Wishlist button text based on wishlist status
+        const wishlistText = item.inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist';
+
+        itemDiv.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" class="cart-item-image" />
+            <div class="cart-item-details">
+                <h3 class="cart-item-name">${item.name}</h3>
+                <p>Size: ${item.size || 'N/A'}</p>
+                <p>Color: ${item.color || 'N/A'}</p>
+                <p class="cart-item-price">$${item.price.toFixed(2)}</p>
+                ${stockAlert}
+                <div class="cart-item-quantity">
+                    <label for="quantity-${index}">Quantity:</label>
+                    <input type="number" id="quantity-${index}" min="1" value="${item.quantity}" />
+                </div>
+                <button class="btn btn-danger remove-item-btn" data-index="${index}">Remove</button>
+                <button class="btn btn-wishlist wishlist-btn" data-index="${index}">${wishlistText}</button>
+                <p><a href="#" class="size-fit-link">Size & Fit Guide</a></p>
+            </div>
+        `;
+
+        cartItemsContainer.appendChild(itemDiv);
+    });
+
+    // Calculate price breakdown
+    const itemsTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const taxes = itemsTotal * 0.08; // 8% tax
+    const shippingCost = calculateShippingCost();
+    const discount = getDiscountAmount();
+
+    const grandTotal = itemsTotal + taxes + shippingCost - discount;
+
+    itemsTotalElement.textContent = itemsTotal.toFixed(2);
+    taxesElement.textContent = taxes.toFixed(2);
+    shippingCostElement.textContent = shippingCost.toFixed(2);
+    discountElement.textContent = discount.toFixed(2);
+    cartTotalElement.textContent = grandTotal.toFixed(2);
+
+    // Enable checkout button
+    checkoutBtn.disabled = false;
+
+    updateCartCount();
+
+    // Add event listeners for quantity changes and remove buttons
+    cartItemsContainer.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const index = parseInt(e.target.id.split('-')[1]);
+            let newQuantity = parseInt(e.target.value);
+            if (isNaN(newQuantity) || newQuantity < 1) {
+                newQuantity = 1;
+                e.target.value = '1';
+            }
+            const cart = getCartItems();
+            cart[index].quantity = newQuantity;
+            saveCartItems(cart);
+            renderCart();
+        });
+    });
+
+    cartItemsContainer.querySelectorAll('.remove-item-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            let cart = getCartItems();
+            cart.splice(index, 1);
+            saveCartItems(cart);
+            renderCart();
+        });
+    });
+
+    // Add event listeners for wishlist buttons
+    cartItemsContainer.querySelectorAll('.wishlist-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            let cart = getCartItems();
+            cart[index].inWishlist = !cart[index].inWishlist;
+            saveCartItems(cart);
+            renderCart();
+        });
+    });
+
+    // Add event listeners for size & fit guide links
+    cartItemsContainer.querySelectorAll('.size-fit-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Size & Fit guide is coming soon!');
+        });
+    });
+}
+
+// Calculate shipping cost based on ZIP code or default
+function calculateShippingCost() {
+    const shippingZip = document.getElementById('shipping-zip')?.value.trim();
+    if (!shippingZip) {
+        return 5.00; // Default shipping cost
+    }
+    // Simple mock: if ZIP starts with 9, cheaper shipping
+    if (shippingZip.startsWith('9')) {
+        return 3.50;
+    }
+    return 7.00;
+}
+
+// Coupon code logic
+let appliedCoupon = null;
+const coupons = {
+    'SAVE10': 0.10, // 10% discount
+    'FREESHIP': 'free-shipping', // free shipping
+};
+
+function getDiscountAmount() {
+    if (!appliedCoupon) return 0;
+    const cart = getCartItems();
+    const itemsTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    if (appliedCoupon === 'free-shipping') {
+        return calculateShippingCost();
+    }
+    if (typeof appliedCoupon === 'number') {
+        return itemsTotal * appliedCoupon;
+    }
+    return 0;
+}
+
+document.getElementById('apply-coupon-btn')?.addEventListener('click', () => {
+    const couponInput = document.getElementById('coupon-code');
+    const couponMessage = document.getElementById('coupon-message');
+    const code = couponInput.value.trim().toUpperCase();
+    if (coupons.hasOwnProperty(code)) {
+        appliedCoupon = coupons[code];
+        couponMessage.textContent = `Coupon "${code}" applied!`;
+    } else {
+        appliedCoupon = null;
+        couponMessage.textContent = 'Invalid coupon code.';
+    }
+    renderCart();
+});
+
+// Shipping estimation button
+document.getElementById('estimate-shipping-btn')?.addEventListener('click', () => {
+    const shippingZip = document.getElementById('shipping-zip')?.value.trim();
+    const shippingEstimateMessage = document.getElementById('shipping-estimate-message');
+    if (!shippingZip) {
+        shippingEstimateMessage.textContent = 'Please enter a ZIP/Postal Code.';
+        return;
+    }
+    // Mock estimation logic
+    if (shippingZip.match(/^\d{5}$/)) {
+        shippingEstimateMessage.textContent = `Estimated shipping cost: $${calculateShippingCost().toFixed(2)}`;
+    } else {
+        shippingEstimateMessage.textContent = 'Invalid ZIP/Postal Code format.';
+    }
+});

@@ -32,8 +32,7 @@
                     <button aria-label="Search">Search</button>
 
                 </div>
-               <div class="user-cart">
-                    <a href="login.html" aria-label="Login">Login</a>
+                <div class="user-cart">
                     <a href="cart.html" aria-label="View Cart">Cart <span class="cart-count"
                             aria-hidden="true">3</span></a>
                 </div>
@@ -69,24 +68,123 @@
         <h2>Our Products</h2>
         <div class="product-grid">
             <div class="product-item" data-category="men" data-price="29.99">
-                <!-- TODO: Replace placeholder image with distinct image for Men's Jacket -->
-                <img src="data:image/jpeg;base64,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" alt="Men's Jacket">
+                <img src="../images/Men's Jacket.jpg" alt="Men's Jacket">
                 <h3>Men's Jacket</h3>
                 <p>$29.99</p>
                 <a href="#" class="add-to-cart">Add to Cart</a>
             </div>
             <div class="product-item" data-category="women" data-price="49.99">
-                <!-- TODO: Replace placeholder image with distinct image for Women's Dress -->
-                <img src="../images/download (1).jpeg" alt="Women's Dress">
+                <img src="../images/Women's Dress.webp" alt="Women's Dress">
                 <h3>Women's Dress</h3>
                 <p>$49.99</p>
                 <a href="#" class="add-to-cart">Add to Cart</a>
             </div>
             <div class="product-item" data-category="accessories" data-price="69.99">
-                <!-- TODO: Replace placeholder image with distinct image for Leather Shoes -->
-                <img src="../images/download.jpeg" alt="Leather Shoes">
+                <img src="../images/Leather Shoes.jpeg" alt="Leather Shoes">
                 <h3>Leather Shoes</h3>
                 <p>$69.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="men" data-price="39.99">
+                <img src="../images/Wrist Watch.webp" alt="Wrist Watch">
+                <h3>Wrist Watch</h3>
+                <p>$39.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="men" data-price="59.99">
+                <img src="../images/Footwear.webp" alt="Men's Footwear">
+                <h3>Men's Footwear</h3>
+                <p>$59.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="women" data-price="34.99">
+                <img src="../images/Women's Fashion.jpeg" alt="Women's Fashion">
+                <h3>Women's Fashion</h3>
+                <p>$34.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="accessories" data-price="19.99">
+                <img src="../images/Accessories.webp" alt="Accessories">
+                <h3>Accessories</h3>
+                <p>$19.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="women" data-price="44.99">
+                <img src="../images/download (1).jpeg" alt="Women's Casual Dress">
+                <h3>Women's Casual Dress</h3>
+                <p>$44.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="men" data-price="24.99">
+                <img src="../images/download.jpeg" alt="Men's Casual Shoes">
+                <h3>Men's Casual Shoes</h3>
+                <p>$24.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="accessories" data-price="14.99">
+                <img src="../images/free-photo-of-crab-shaped-keychains-pendant-wristwatch-and-jeans.jpeg" alt="Keychains">
+                <h3>Keychains</h3>
+                <p>$14.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="men" data-price="79.99">
+                <img src="../images/Men's Jacket.jpg" alt="Men's Leather Jacket">
+                <h3>Men's Leather Jacket</h3>
+                <p>$79.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="women" data-price="59.99">
+                <img src="../images/Women's Dress.webp" alt="Women's Evening Dress">
+                <h3>Women's Evening Dress</h3>
+                <p>$59.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="accessories" data-price="29.99">
+                <img src="../images/Wrist Watch.webp" alt="Luxury Wrist Watch">
+                <h3>Luxury Wrist Watch</h3>
+                <p>$29.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="men" data-price="49.99">
+                <img src="../images/Footwear.webp" alt="Men's Running Shoes">
+                <h3>Men's Running Shoes</h3>
+                <p>$49.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="women" data-price="39.99">
+                <img src="../images/Women's Fashion.jpeg" alt="Women's Summer Dress">
+                <h3>Women's Summer Dress</h3>
+                <p>$39.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="accessories" data-price="9.99">
+                <img src="../images/Accessories.webp" alt="Fashion Accessories">
+                <h3>Fashion Accessories</h3>
+                <p>$9.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="men" data-price="69.99">
+                <img src="../images/Men's Jacket.jpg" alt="Men's Winter Jacket">
+                <h3>Men's Winter Jacket</h3>
+                <p>$69.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="women" data-price="54.99">
+                <img src="../images/Women's Dress.webp" alt="Women's Party Dress">
+                <h3>Women's Party Dress</h3>
+                <p>$54.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="accessories" data-price="24.99">
+                <img src="../images/Leather Shoes.jpeg" alt="Leather Belt">
+                <h3>Leather Belt</h3>
+                <p>$24.99</p>
+                <a href="#" class="add-to-cart">Add to Cart</a>
+            </div>
+            <div class="product-item" data-category="men" data-price="34.99">
+                <img src="../images/Men's Jacket.jpg" alt="Men's Casual Shirt">
+                <h3>Men's Casual Shirt</h3>
+                <p>$34.99</p>
                 <a href="#" class="add-to-cart">Add to Cart</a>
             </div>
         </div>
