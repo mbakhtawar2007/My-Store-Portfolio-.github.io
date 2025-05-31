@@ -137,21 +137,163 @@ if (scrollToTopBtn) {
     });
 }
 
-// Filter products based on category and price
+// Filter products based on category checkboxes, price, and sort
 const filterProducts = () => {
-    const categorySelect = document.getElementById('category');
+    const categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
+    const selectedCategories = Array.from(categoryCheckboxes).map(cb => cb.value);
     const priceRange = document.getElementById('price');
-    const category = categorySelect ? categorySelect.value : 'all';
-    const price = priceRange ? parseFloat(priceRange.value) : Infinity;
-    const products = document.querySelectorAll('.product-item');
+    const maxPrice = priceRange ? parseFloat(priceRange.value) : Infinity;
+    const sortSelect = document.getElementById('sort');
+    const sortValue = sortSelect ? sortSelect.value : 'name-asc';
 
-    products.forEach(product => {
+    const products = Array.from(document.querySelectorAll('.product-item'));
+
+    // Filter products by category and price
+    let filteredProducts = products.filter(product => {
         const productCategory = product.getAttribute('data-category');
         const productPrice = parseFloat(product.getAttribute('data-price')) || 0;
+        return selectedCategories.includes(productCategory) && productPrice <= maxPrice;
+    });
 
-        product.style.display = (category === 'all' || category === productCategory) && productPrice <= price ? 'block' : 'none';
+    // Sort products
+    filteredProducts.sort((a, b) => {
+        const nameA = a.querySelector('h3')?.textContent.toLowerCase() || '';
+        const nameB = b.querySelector('h3')?.textContent.toLowerCase() || '';
+        const priceA = parseFloat(a.getAttribute('data-price')) || 0;
+        const priceB = parseFloat(b.getAttribute('data-price')) || 0;
+
+        switch (sortValue) {
+            case 'name-asc':
+                return nameA.localeCompare(nameB);
+            case 'name-desc':
+                return nameB.localeCompare(nameA);
+            case 'price-asc':
+                return priceA - priceB;
+            case 'price-desc':
+                return priceB - priceA;
+            default:
+                return 0;
+        }
+    });
+
+    // Hide all products initially
+    products.forEach(product => {
+        product.style.display = 'none';
+    });
+
+    // Show filtered and sorted products in order
+    const productGrid = document.querySelector('.product-grid');
+    if (!productGrid) return;
+
+    // Remove all product elements from grid
+    products.forEach(product => productGrid.removeChild(product));
+
+    // Append filtered products in sorted order
+    filteredProducts.forEach(product => {
+        product.style.display = 'block';
+        productGrid.appendChild(product);
     });
 };
+
+// Update URL query parameters to persist filters and sort
+const updateURLParams = () => {
+    const categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
+    const selectedCategories = Array.from(categoryCheckboxes).map(cb => cb.value);
+    const priceRange = document.getElementById('price');
+    const maxPrice = priceRange ? priceRange.value : '';
+    const sortSelect = document.getElementById('sort');
+    const sortValue = sortSelect ? sortSelect.value : '';
+
+    const params = new URLSearchParams();
+
+    if (selectedCategories.length > 0) {
+        params.set('category', selectedCategories.join(','));
+    }
+    if (maxPrice) {
+        params.set('price', maxPrice);
+    }
+    if (sortValue) {
+        params.set('sort', sortValue);
+    }
+
+    const newUrl = window.location.pathname + '?' + params.toString();
+    window.history.replaceState({}, '', newUrl);
+};
+
+// Load filters and sort from URL query parameters
+const loadFiltersFromURL = () => {
+    const params = new URLSearchParams(window.location.search);
+
+    // Categories
+    const categoryParam = params.get('category');
+    if (categoryParam) {
+        const categories = categoryParam.split(',');
+        document.querySelectorAll('input[name="category"]').forEach(cb => {
+            cb.checked = categories.includes(cb.value);
+        });
+    }
+
+    // Price
+    const priceParam = params.get('price');
+    if (priceParam) {
+        const priceRange = document.getElementById('price');
+        const priceValue = document.getElementById('priceValue');
+        if (priceRange) {
+            priceRange.value = priceParam;
+        }
+        if (priceValue) {
+            priceValue.textContent = `$${priceParam}`;
+        }
+    }
+
+    // Sort
+    const sortParam = params.get('sort');
+    if (sortParam) {
+        const sortSelect = document.getElementById('sort');
+        if (sortSelect) {
+            sortSelect.value = sortParam;
+        }
+    }
+};
+
+// Event listeners for filters and sort
+const setupFilterListeners = () => {
+    const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
+    const priceRange = document.getElementById('price');
+    const sortSelect = document.getElementById('sort');
+
+    categoryCheckboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+            filterProducts();
+            updateURLParams();
+        });
+    });
+
+    if (priceRange) {
+        priceRange.addEventListener('input', () => {
+            const priceValue = document.getElementById('priceValue');
+            if (priceValue) {
+                priceValue.textContent = `$${priceRange.value}`;
+            }
+            filterProducts();
+            updateURLParams();
+        });
+    }
+
+    if (sortSelect) {
+        sortSelect.addEventListener('change', () => {
+            filterProducts();
+            updateURLParams();
+        });
+    }
+};
+
+// Initialize filters on page load
+window.addEventListener('DOMContentLoaded', () => {
+    loadFiltersFromURL();
+    filterProducts();
+    setupFilterListeners();
+});
 
 // Add event listeners for filtering if elements exist
 const categorySelect = document.getElementById('category');

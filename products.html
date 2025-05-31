@@ -54,17 +54,25 @@
     <!-- Product Filter Section -->
     <section class="product-filter">
         <h3>Filter Products</h3>
-        <form>
-            <label for="category">Category:</label>
-            <select id="category" name="category">
-                <option value="all">All</option>
-                <option value="men">Men</option>
-                <option value="women">Women</option>
-                <option value="accessories">Accessories</option>
-            </select>
+        <form id="filterForm">
+            <fieldset>
+                <legend>Category:</legend>
+                <label><input type="checkbox" name="category" value="men" checked> Men</label>
+                <label><input type="checkbox" name="category" value="women" checked> Women</label>
+                <label><input type="checkbox" name="category" value="accessories" checked> Accessories</label>
+            </fieldset>
 
             <label for="price">Price Range:</label>
             <input type="range" id="price" name="price" min="0" max="1000" step="10">
+            <span id="priceValue">$0</span>
+
+            <label for="sort">Sort by:</label>
+            <select id="sort" name="sort">
+                <option value="name-asc">Name Ascending</option>
+                <option value="name-desc">Name Descending</option>
+                <option value="price-asc">Price Low to High</option>
+                <option value="price-desc">Price High to Low</option>
+            </select>
         </form>
     </section>
 

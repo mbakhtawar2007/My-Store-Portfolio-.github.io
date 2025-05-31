@@ -347,3 +347,12 @@ body {
         width: 100%;
     }
 }
+
+/* Price value display next to range slider */
+#priceValue {
+    font-weight: 600;
+    color: #FF5722;
+    margin-left: 10px;
+    min-width: 40px;
+    display: inline-block;
+}
