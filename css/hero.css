@@ -22,7 +22,7 @@
     position: relative;
     z-index: 1;
     overflow: hidden;
-    background-color: var(--fallback-bg); /* Fallback background color */
+    background-color: var(--fallback-bg);
     animation: fadeIn 1.5s ease-in-out;
 }
 
@@ -139,10 +139,10 @@
     filter: brightness(0.8);
 }
 
-/* Responsive Layout */
+/* Media Queries */
 
-/* Mobile devices: 320px — 480px */
-@media (max-width: 480px) {
+/* Mobile Devices: 320px to 479px */
+@media (max-width: 479px) {
     .hero-section {
         flex-direction: column;
         text-align: center;
@@ -166,17 +166,14 @@
         margin-top: 20px;
     }
 
-    .newsletter input {
-        width: 100%;
-    }
-
+    .newsletter input,
     .newsletter button {
         width: 100%;
     }
 }
 
-/* iPads, Tablets: 481px — 768px */
-@media (min-width: 481px) and (max-width: 768px) {
+/* Tablets / iPads: 480px to 767px */
+@media (min-width: 480px) and (max-width: 767px) {
     .hero-section {
         flex-direction: column;
         padding: 100px 20px;
@@ -198,17 +195,14 @@
         margin-top: 20px;
     }
 
-    .newsletter input {
-        width: 200px;
-    }
-
+    .newsletter input,
     .newsletter button {
         width: 200px;
     }
 }
 
-/* Small screens, laptops: 769px — 1024px */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Laptops / Small Screens: 768px to 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
     .hero-section {
         flex-direction: row;
         padding: 120px 40px;
@@ -226,17 +220,14 @@
         flex-direction: row;
     }
 
-    .newsletter input {
-        width: 250px;
-    }
-
+    .newsletter input,
     .newsletter button {
         width: 250px;
     }
 }
 
-/* Desktops, large screens: 1025px — 1200px */
-@media (min-width: 1025px) and (max-width: 1200px) {
+/* Desktops / Large Screens: 1024px to 1199px */
+@media (min-width: 1024px) and (max-width: 1199px) {
     .hero-section {
         padding: 140px 60px;
     }
@@ -253,17 +244,14 @@
         flex-direction: row;
     }
 
-    .newsletter input {
-        width: 300px;
-    }
-
+    .newsletter input,
     .newsletter button {
         width: 300px;
     }
 }
 
-/* Extra large screens, TV: 1201px and more */
-@media (min-width: 1201px) {
+/* Extra-Large Screens: 1200px and above */
+@media (min-width: 1200px) {
     .hero-section {
         padding: 150px 80px;
     }
@@ -280,10 +268,7 @@
         flex-direction: row;
     }
 
-    .newsletter input {
-        width: 350px;
-    }
-
+    .newsletter input,
     .newsletter button {
         width: 350px;
     }
@@ -295,6 +280,7 @@
         opacity: 0;
         transform: translateY(50px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -305,6 +291,7 @@
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }

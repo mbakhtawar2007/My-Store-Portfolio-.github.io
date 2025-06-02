@@ -61,8 +61,143 @@
     background-color: #E64A19;
 }
 
-/* Responsive Media Queries */
+/* -------------------------------------------------- */
+/* Responsive Media Queries for Specific Screen Ranges */
+/* -------------------------------------------------- */
 
+/* Mobile Devices: 320px to 480px */
+@media (min-width: 320px) and (max-width: 480px) {
+    .contact-section {
+        max-width: 100%;
+        margin: 15px 10px;
+        padding: 0 10px;
+    }
+
+    .contact-section h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    .contact-section input[type="text"],
+    .contact-section input[type="email"],
+    .contact-section textarea {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+    }
+
+    .contact-section button.btn-primary {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+    }
+}
+
+/* Tablets/iPads: 480px to 768px */
+@media (min-width: 480px) and (max-width: 768px) {
+    .contact-section {
+        max-width: 540px;
+        margin: 25px auto;
+        padding: 0 15px;
+    }
+
+    .contact-section h2 {
+        font-size: 2rem;
+        margin-bottom: 25px;
+    }
+
+    .contact-section input[type="text"],
+    .contact-section input[type="email"],
+    .contact-section textarea {
+        font-size: 0.95rem;
+        padding: 9px 11px;
+    }
+
+    .contact-section button.btn-primary {
+        font-size: 1rem;
+        padding: 11px 18px;
+    }
+}
+
+/* Laptops/Small Screens: 768px to 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .contact-section {
+        max-width: 700px;
+        margin: 35px auto;
+        padding: 0 20px;
+    }
+
+    .contact-section h2 {
+        font-size: 2.2rem;
+        margin-bottom: 30px;
+    }
+
+    .contact-section input[type="text"],
+    .contact-section input[type="email"],
+    .contact-section textarea {
+        font-size: 1rem;
+        padding: 10px 12px;
+    }
+
+    .contact-section button.btn-primary {
+        font-size: 1.1rem;
+        padding: 12px 20px;
+    }
+}
+
+/* Desktops/Large Screens: 1024px to 1200px */
+@media (min-width: 1024px) and (max-width: 1200px) {
+    .contact-section {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .contact-section h2 {
+        font-size: 2.4rem;
+        margin-bottom: 35px;
+    }
+
+    .contact-section input[type="text"],
+    .contact-section input[type="email"],
+    .contact-section textarea {
+        font-size: 1.1rem;
+        padding: 11px 13px;
+    }
+
+    .contact-section button.btn-primary {
+        font-size: 1.2rem;
+        padding: 13px 22px;
+    }
+}
+
+/* Extra-Large Devices: 1200px and above */
+@media (min-width: 1200px) {
+    .contact-section {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .contact-section h2 {
+        font-size: 2.6rem;
+        margin-bottom: 40px;
+    }
+
+    .contact-section input[type="text"],
+    .contact-section input[type="email"],
+    .contact-section textarea {
+        font-size: 1.2rem;
+        padding: 12px 14px;
+    }
+
+    .contact-section button.btn-primary {
+        font-size: 1.3rem;
+        padding: 14px 24px;
+    }
+}
+
+/* Existing Responsive Breakpoints (Optional/Legacy) */
+
+/* Very Small Devices (under 575.98px) */
 @media (max-width: 575.98px) {
     .contact-section {
         margin: 20px 10px;
@@ -87,6 +222,7 @@
     }
 }
 
+/* Small Devices (576px to 767.98px) */
 @media (min-width: 576px) and (max-width: 767.98px) {
     .contact-section {
         margin: 30px 15px;

@@ -29,7 +29,9 @@ header {
 }
 
 /* Buttons */
-button, .add-to-cart, .view-category {
+button,
+.add-to-cart,
+.view-category {
     background-color: var(--primary-color);
     color: var(--text-color);
     border: none;
@@ -40,7 +42,9 @@ button, .add-to-cart, .view-category {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-button:hover, .add-to-cart:hover, .view-category:hover {
+button:hover,
+.add-to-cart:hover,
+.view-category:hover {
     background-color: var(--secondary-color);
     transform: scale(1.05);
 }
@@ -135,54 +139,13 @@ button:hover, .add-to-cart:hover, .view-category:hover {
 }
 
 /* Responsive Media Queries */
-@media (max-width: 768px) {
-    .navbar ul {
-        flex-direction: column;
-        background-color: var(--primary-color);
-        padding: 15px;
-    }
 
-    .product-item img {
-        height: 150px; /* Adjust image height for mobile */
-    }
-
-    .search-bar input {
-        width: 100%;
-    }
-
-    button, .add-to-cart, .view-category {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-@media (min-width: 769px) {
-    .navbar ul {
-        flex-direction: row;
-    }
-
-    .search-bar input {
-        width: 200px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .navbar {
-        padding: 15px 10%;
-    }
-
-    .search-bar input {
-        width: 250px;
-    }
-}
-
-/* Additional Media Queries for Responsiveness */
-
-/* Extra small devices (phones, less than 576px) */
-@media (max-width: 575.98px) {
+/* Mobile Devices: 320px to 480px */
+@media (min-width: 320px) and (max-width: 480px) {
     .navbar {
         flex-direction: column;
         align-items: flex-start;
+        padding: 15px 5%;
     }
 
     .navbar ul {
@@ -206,10 +169,37 @@ button:hover, .add-to-cart:hover, .view-category:hover {
     .product-price {
         font-size: 0.9rem;
     }
+
+    .search-bar input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button,
+    .add-to-cart,
+    .view-category {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
 }
 
-/* Small devices (tablets, 576px and up) */
-@media (min-width: 576px) and (max-width: 767.98px) {
+/* Tablets/iPads: 481px to 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+    .navbar {
+        flex-direction: row;
+        align-items: center;
+        padding: 15px 5%;
+        background-color: var(--primary-color);
+    }
+
+    .navbar ul {
+        flex-direction: row;
+        gap: 20px;
+        background-color: transparent;
+        width: auto;
+    }
+
     .product-item img {
         height: 140px;
     }
@@ -221,10 +211,32 @@ button:hover, .add-to-cart:hover, .view-category:hover {
     .product-price {
         font-size: 0.95rem;
     }
+
+    .search-bar input {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    button,
+    .add-to-cart,
+    .view-category {
+        width: auto;
+    }
 }
 
-/* Medium devices (desktops, 768px and up) */
-@media (min-width: 768px) and (max-width: 991.98px) {
+/* Laptops/Small Screens: 769px to 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .navbar {
+        flex-direction: row;
+        padding: 15px 5%;
+        align-items: center;
+    }
+
+    .navbar ul {
+        flex-direction: row;
+        gap: 20px;
+    }
+
     .product-item img {
         height: 160px;
     }
@@ -236,10 +248,18 @@ button:hover, .add-to-cart:hover, .view-category:hover {
     .product-price {
         font-size: 1rem;
     }
+
+    .search-bar input {
+        width: 200px;
+    }
 }
 
-/* Large devices (large desktops, 992px and up) */
-@media (min-width: 992px) and (max-width: 1199.98px) {
+/* Desktops/Large Screens: 1025px to 1200px */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .navbar {
+        padding: 15px 10%;
+    }
+
     .product-item img {
         height: 180px;
     }
@@ -251,10 +271,14 @@ button:hover, .add-to-cart:hover, .view-category:hover {
     .product-price {
         font-size: 1.05rem;
     }
+
+    .search-bar input {
+        width: 250px;
+    }
 }
 
-/* Extra large devices (larger desktops, 1200px and up) */
-@media (min-width: 1200px) {
+/* Extra-Large Devices: 1201px and above */
+@media (min-width: 1201px) {
     .product-item img {
         height: 200px;
     }
@@ -265,5 +289,13 @@ button:hover, .add-to-cart:hover, .view-category:hover {
 
     .product-price {
         font-size: 1.1rem;
+    }
+
+    .navbar {
+        padding: 15px 10%;
+    }
+
+    .search-bar input {
+        width: 300px;
     }
 }

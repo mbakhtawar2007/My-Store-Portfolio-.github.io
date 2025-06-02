@@ -45,7 +45,8 @@ header {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: none; /* Hidden by default for mobile */
+    display: none;
+    /* Hidden by default for mobile */
     flex-direction: column;
 }
 
@@ -171,6 +172,7 @@ header {
         opacity: 0;
         transform: translateY(20px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -178,10 +180,91 @@ header {
 }
 
 /* Responsive Design */
+
+/* Mobile Devices: 320px to 480px */
+@media (min-width: 320px) and (max-width: 480px) {
+    .navbar {
+        padding: 15px 3%;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .search-bar input {
+        width: 100px;
+    }
+
+    .cart-count {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+}
+
+/* Tablets/iPads: 481px to 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+    .navbar {
+        padding: 15px 4%;
+    }
+
+    .logo {
+        font-size: 1.6rem;
+    }
+
+    .search-bar input {
+        width: 130px;
+    }
+}
+
+/* Laptops/Small Screens: 769px to 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .navbar {
+        padding: 15px 6%;
+    }
+
+    .logo {
+        font-size: 1.7rem;
+    }
+
+    .search-bar input {
+        width: 180px;
+    }
+}
+
+/* Desktops/Large Screens: 1025px to 1200px */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .navbar {
+        padding: 15px 8%;
+    }
+
+    .search-bar input {
+        width: 220px;
+    }
+}
+
+/* Extra-Large Devices: 1201px and above */
+@media (min-width: 1201px) {
+    .navbar {
+        padding: 15px 12%;
+    }
+
+    .search-bar input {
+        width: 280px;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
+}
+
+/* Existing Media Queries */
+
+/* Under 768px (Mobile & Small Tablets) */
 @media (max-width: 767px) {
     .navbar-center ul {
         flex-direction: column;
-        display: none; /* Default hidden */
+        display: none;
+        /* Default hidden */
         text-align: center;
         gap: 10px;
         background-color: var(--secondary-color);
@@ -212,6 +295,7 @@ header {
     }
 }
 
+/* From 768px (Tablets and above) */
 @media (min-width: 768px) {
     .navbar-center ul {
         flex-direction: row;
@@ -231,6 +315,7 @@ header {
     }
 }
 
+/* From 1024px (Desktops and above) */
 @media (min-width: 1024px) {
     .navbar {
         padding: 15px 10%;

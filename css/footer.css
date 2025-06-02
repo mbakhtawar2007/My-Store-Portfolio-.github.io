@@ -37,8 +37,37 @@ footer p {
     transform: scale(1.1);
 }
 
-/* Responsive Media Queries */
-@media (max-width: 480px) {
+/* Animation for Footer and Scroll-to-top Button */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes buttonFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ==========================
+   MEDIA QUERIES
+   ========================== */
+
+/* 1. Mobile Devices: 320px to 480px */
+@media (min-width: 320px) and (max-width: 480px) {
     footer {
         padding: 15px;
         font-size: 0.9rem;
@@ -52,7 +81,8 @@ footer p {
     }
 }
 
-@media (min-width: 481px) and (max-width: 768px) {
+/* 2. Tablets/iPads: 480px to 768px */
+@media (min-width: 480px) and (max-width: 768px) {
     footer {
         padding: 18px;
         font-size: 1rem;
@@ -66,7 +96,8 @@ footer p {
     }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+/* 3. Laptops/Small Screens: 768px to 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
     footer {
         padding: 20px;
         font-size: 1.1rem;
@@ -80,7 +111,8 @@ footer p {
     }
 }
 
-@media (min-width: 1025px) and (max-width: 1200px) {
+/* 4. Desktops/Large Screens: 1024px to 1200px */
+@media (min-width: 1024px) and (max-width: 1200px) {
     footer {
         padding: 20px;
         font-size: 1.1rem;
@@ -94,7 +126,8 @@ footer p {
     }
 }
 
-@media (min-width: 1201px) {
+/* 5. Extra-Large Devices: 1200px and above */
+@media (min-width: 1200px) {
     footer {
         padding: 25px;
         font-size: 1.2rem;
@@ -105,28 +138,5 @@ footer p {
         font-size: 2rem;
         bottom: 40px;
         right: 40px;
-    }
-}
-
-/* Animation for Footer and Scroll-to-top Button */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes buttonFadeIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
     }
 }
