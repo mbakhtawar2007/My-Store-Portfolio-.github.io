@@ -1,600 +1,760 @@
 // script.js
 
-/* Updated script.js with dynamic cart item management */
+(() => {
+    'use strict';
 
-// Utility function to update cart count
-function updateCartCount() {
-    const cartCount = document.querySelector('.cart-count');
-    const cart = getCartItems();
-    const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-    if (cartCount) {
-        cartCount.textContent = totalCount;
+    // --- Cached Selectors ---
+    // Notification banner (for inline feedback instead of alert)
+    const notifEl = document.getElementById('notification'); // <div id="notification" aria-live="polite"></div>
+
+    // Cart elements
+    const cartCountEl = document.querySelector('.cart-count');
+    const cartItemsContainer = document.querySelector('.cart-items');
+    const itemsTotalEl = document.getElementById('items-total');
+    const taxesEl = document.getElementById('taxes');
+    const shippingCostEl = document.getElementById('shipping-cost');
+    const discountEl = document.getElementById('discount');
+    const cartTotalEl = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const couponInputEl = document.getElementById('coupon-code');
+    const applyCouponBtn = document.getElementById('apply-coupon-btn');
+    const shippingZipEl = document.getElementById('shipping-zip');
+    const estimateShippingBtn = document.getElementById('estimate-shipping-btn');
+    const shippingEstimateMessageEl = document.getElementById('shipping-estimate-message');
+    const couponMessageEl = document.getElementById('coupon-message');
+
+    // Filter & Sort elements
+    const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
+    const priceRangeEl = document.getElementById('price');
+    const priceValueEl = document.getElementById('priceValue');
+    const sortSelectEl = document.getElementById('sort');
+    const productGridEl = document.querySelector('.product-grid');
+
+    // Search elements
+    const searchInputEl = document.querySelector('.search-bar input[type="text"]');
+    const searchBtnEl = document.querySelector('.search-bar button');
+
+    // Navbar toggle
+    const hamburgerEl = document.getElementById('hamburger');
+    const navbarMenuEl = document.getElementById('navbarMenu'); // Should match aria-controls in HTML
+
+    // Contact form
+    const contactFormEl = document.getElementById('contactForm');
+
+    // --- Utility Functions ---
+
+    /**
+     * Show a non-blocking in-page notification.
+     * @param {string} msg - The message to display.
+     * @param {'success'|'error'|'info'} [type='info'] - Style type.
+     */
+    function showNotification(msg, type = 'info') {
+        if (!notifEl) return;
+        notifEl.textContent = msg;
+        notifEl.className = `show ${type}`; // e.g. .show.success or .show.error
+        // Automatically clear after 3s
+        setTimeout(() => {
+            notifEl.className = '';
+            notifEl.textContent = '';
+        }, 3000);
     }
-}
 
-// Get cart items from localStorage
-function getCartItems() {
-    const cart = localStorage.getItem('cartItems');
-    return cart ? JSON.parse(cart) : [];
-}
-
-// Save cart items to localStorage
-function saveCartItems(cart) {
-    localStorage.setItem('cartItems', JSON.stringify(cart));
-}
-
-// Add item to cart with product details
-function addToCart(product) {
-    let cart = getCartItems();
-    const existingItemIndex = cart.findIndex(item => item.id === product.id);
-    if (existingItemIndex !== -1) {
-        cart[existingItemIndex].quantity += 1;
-    } else {
-        cart.push({...product, quantity: 1});
-    }
-    saveCartItems(cart);
-    updateCartCount();
-    alert('Item added to cart!');
-}
-
-// Handle Add to Cart button click
-document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('add-to-cart')) {
-        event.preventDefault(); // Prevent page refresh
-        const productElement = event.target.closest('.product-item');
-        if (!productElement) return;
-        const product = {
-            id: productElement.querySelector('h3')?.textContent || '',
-            name: productElement.querySelector('h3')?.textContent || '',
-            price: parseFloat(productElement.querySelector('p')?.textContent.replace('$', '')) || 0,
-            image: productElement.querySelector('img')?.src || ''
+    /**
+     * Debounce helper to limit how often a function runs.
+     * @param {Function} func - The function to debounce.
+     * @param {number} wait - Delay in ms.
+     * @returns {Function} - Debounced function.
+     */
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
         };
-        addToCart(product);
     }
-});
 
-// Redirect to products.html?category on product card click except when clicking Add to Cart
-document.addEventListener('click', (event) => {
-    const productItem = event.target.closest('.product-item');
-    if (productItem && !event.target.classList.contains('add-to-cart')) {
-        const category = productItem.getAttribute('data-category');
-        if (category) {
-            window.location.href = `products.html?category=${encodeURIComponent(category)}`;
+    /**
+     * Safely retrieve cart items from localStorage. If JSON.parse fails, reset it.
+     * @returns {Array<Object>}
+     */
+    function getCartItems() {
+        const data = localStorage.getItem('cartItems');
+        if (!data) return [];
+        try {
+            return JSON.parse(data);
+        } catch (err) {
+            console.warn('Corrupted cartItems in localStorage. Resetting to empty array.');
+            localStorage.removeItem('cartItems');
+            return [];
         }
     }
-});
 
-function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-}
+    /**
+     * Save the cart array to localStorage.
+     * @param {Array<Object>} cart
+     */
+    function saveCartItems(cart) {
+        localStorage.setItem('cartItems', JSON.stringify(cart));
+    }
 
-// On page load, set the cart count from localStorage
-window.addEventListener('DOMContentLoaded', () => {
-    updateCartCount();
+    /**
+     * Retrieve the currently applied coupon code from localStorage.
+     * @returns {string|null}
+     */
+    function getAppliedCouponCode() {
+        return localStorage.getItem('cartCoupon') || null;
+    }
 
-    // Render cart items if on cart page
-    if (document.querySelector('.cart-items')) {
-        renderCart();
+    /**
+     * Store a coupon code in localStorage.
+     * @param {string|null} code
+     */
+    function setAppliedCouponCode(code) {
+        if (code) localStorage.setItem('cartCoupon', code);
+        else localStorage.removeItem('cartCoupon');
+    }
 
-        const checkoutBtn = document.getElementById('checkout-btn');
-        if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', () => {
-                alert('Checkout functionality is not implemented yet.');
+    /**
+     * Calculate shipping cost. If ZIP (5 digits) starts with '9', cost is $3.50, else $7.00, default $5.00.
+     * @returns {number}
+     */
+    function calculateShippingCost() {
+        const zip = shippingZipEl?.value.trim() || '';
+        if (!zip) return 5.0;
+        if (/^\d{5}$/.test(zip)) {
+            return zip.startsWith('9') ? 3.5 : 7.0;
+        }
+        return 5.0; // fallback default if format not exactly 5 digits
+    }
+
+    /**
+     * Calculate discount amount based on coupon stored in localStorage.
+     * @param {number} itemsTotal
+     * @returns {number}
+     */
+    function getDiscountAmount(itemsTotal) {
+        const code = getAppliedCouponCode();
+        if (!code) return 0;
+        const coupons = {
+            'SAVE10': 0.10,       // 10% off
+            'FREESHIP': 'free',   // free shipping
+        };
+        if (!coupons.hasOwnProperty(code)) return 0;
+
+        const val = coupons[code];
+        if (val === 'free') {
+            return calculateShippingCost(); // full shipping cost waived
+        }
+        if (typeof val === 'number') {
+            return itemsTotal * val;
+        }
+        return 0;
+    }
+
+    /**
+     * Calculate price breakdown: items total, tax (8%), shipping, discount, grand total.
+     * @returns {{itemsTotal:number, tax:number, shipping:number, discount:number, grandTotal:number}}
+     */
+    function calculatePriceBreakdown() {
+        const cart = getCartItems();
+        const itemsTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const tax = parseFloat((itemsTotal * 0.08).toFixed(2));
+        const shipping = calculateShippingCost();
+        const discount = parseFloat(getDiscountAmount(itemsTotal).toFixed(2));
+        const grandTotal = parseFloat((itemsTotal + tax + shipping - discount).toFixed(2));
+        return { itemsTotal, tax, shipping, discount, grandTotal };
+    }
+
+    /**
+     * Render the price breakdown section on the cart page.
+     */
+    function renderPriceBreakdown() {
+        const { itemsTotal, tax, shipping, discount, grandTotal } = calculatePriceBreakdown();
+        if (itemsTotalEl) itemsTotalEl.textContent = itemsTotal.toFixed(2);
+        if (taxesEl) taxesEl.textContent = tax.toFixed(2);
+        if (shippingCostEl) shippingCostEl.textContent = shipping.toFixed(2);
+        if (discountEl) discountEl.textContent = discount.toFixed(2);
+        if (cartTotalEl) cartTotalEl.textContent = grandTotal.toFixed(2);
+    }
+
+    /**
+     * Update the cart count badge (sum of all quantities).
+     */
+    function updateCartCount() {
+        if (!cartCountEl) return;
+        const cart = getCartItems();
+        const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountEl.textContent = totalCount;
+    }
+
+    /**
+     * Add a product object to the cart (in localStorage), or increment quantity if it already exists.
+     * @param {{id:string, name:string, price:number, image:string}} product
+     */
+    function addToCart(product) {
+        const cart = getCartItems();
+        const idx = cart.findIndex(item => item.id === product.id);
+        if (idx > -1) {
+            cart[idx].quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+        saveCartItems(cart);
+        updateCartCount();
+        showNotification('✔️ Item added to cart!', 'success');
+    }
+
+    /**
+     * Render all cart items on the cart page and attach listeners.
+     */
+    function renderCartItems() {
+        if (!cartItemsContainer) return;
+        const cart = getCartItems();
+
+        // Clear existing items
+        cartItemsContainer.innerHTML = '';
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+            if (checkoutBtn) checkoutBtn.disabled = true;
+            renderPriceBreakdown();
+            updateCartCount();
+            return;
+        }
+
+        // For each item, build its DOM row
+        cart.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'cart-item';
+            row.dataset.id = item.id;
+
+            // Stock alert (if item.stock exists and < 5)
+            let stockInfo = '';
+            if (typeof item.stock === 'number' && item.stock < 5) {
+                stockInfo = `<p class="stock-alert">Only ${item.stock} left in stock!</p>`;
+            }
+
+            const wishlistText = item.inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist';
+
+            row.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" class="cart-item-image" />
+        <div class="cart-item-details">
+          <h3 class="cart-item-name">${item.name}</h3>
+          <p>Size: ${item.size || 'N/A'}</p>
+          <p>Color: ${item.color || 'N/A'}</p>
+          <p class="cart-item-price">$${item.price.toFixed(2)}</p>
+          ${stockInfo}
+          <div class="cart-item-quantity">
+            <label for="quantity-${item.id}">Quantity:</label>
+            <input type="number" id="quantity-${item.id}" class="quantity-input" data-id="${item.id}" min="1" value="${item.quantity}" />
+          </div>
+          <button class="btn btn-danger remove-item-btn" data-id="${item.id}">Remove</button>
+          <button class="btn btn-wishlist wishlist-btn" data-id="${item.id}">${wishlistText}</button>
+          <p><a href="#" class="size-fit-link">Size & Fit Guide</a></p>
+        </div>
+      `;
+            cartItemsContainer.appendChild(row);
+        });
+
+        // Enable checkout
+        if (checkoutBtn) checkoutBtn.disabled = false;
+
+        // Render prices
+        renderPriceBreakdown();
+
+        // Update cart count
+        updateCartCount();
+    }
+
+    /**
+     * Update a single cart item's quantity in localStorage and re-render prices.
+     * @param {string} id
+     * @param {number} newQty
+     */
+    function updateCartItemQuantity(id, newQty) {
+        const cart = getCartItems();
+        const idx = cart.findIndex(item => item.id === id);
+        if (idx === -1) return;
+        cart[idx].quantity = newQty < 1 ? 1 : newQty;
+        saveCartItems(cart);
+        renderPriceBreakdown();
+        updateCartCount();
+    }
+
+    /**
+     * Remove a single item from the cart by ID, then re-render everything.
+     * @param {string} id
+     */
+    function removeCartItem(id) {
+        let cart = getCartItems();
+        cart = cart.filter(item => item.id !== id);
+        saveCartItems(cart);
+        renderCartItems();
+    }
+
+    /**
+     * Toggle wishlist status for a cart item (persist locally), then re-render the cart UI.
+     * @param {string} id
+     */
+    function toggleWishlist(id) {
+        const cart = getCartItems();
+        const idx = cart.findIndex(item => item.id === id);
+        if (idx === -1) return;
+        cart[idx].inWishlist = !cart[idx].inWishlist;
+        saveCartItems(cart);
+        renderCartItems();
+    }
+
+    /**
+     * Apply a coupon code (if valid) and re-render price breakdown.
+     */
+    function applyCoupon() {
+        const code = (couponInputEl?.value.trim() || '').toUpperCase();
+        const validCoupons = ['SAVE10', 'FREESHIP'];
+        if (validCoupons.includes(code)) {
+            setAppliedCouponCode(code);
+            couponMessageEl.textContent = `Coupon "${code}" applied!`;
+            showNotification(`Coupon "${code}" applied!`, 'success');
+        } else {
+            setAppliedCouponCode(null);
+            couponMessageEl.textContent = 'Invalid coupon code.';
+            showNotification('Invalid coupon code.', 'error');
+        }
+        renderPriceBreakdown();
+    }
+
+    /**
+     * Estimate shipping cost (mock logic) and display it.
+     */
+    function estimateShipping() {
+        const zip = shippingZipEl?.value.trim() || '';
+        if (!zip) {
+            shippingEstimateMessageEl.textContent = 'Please enter a ZIP/Postal Code.';
+            return;
+        }
+        if (/^\d{5}$/.test(zip)) {
+            const cost = calculateShippingCost().toFixed(2);
+            shippingEstimateMessageEl.textContent = `Estimated shipping cost: $${cost}`;
+        } else {
+            shippingEstimateMessageEl.textContent = 'Invalid ZIP/Postal Code format.';
+        }
+        // After estimating, re-render price breakdown to update shipping in the total
+        renderPriceBreakdown();
+    }
+
+    /**
+     * Handle cart‐page events (quantity changes, remove, wishlist, size & fit).
+     */
+    function handleCartPageClick(e) {
+        // Quantity change
+        if (e.target.matches('.quantity-input')) {
+            const id = e.target.dataset.id;
+            let newQty = parseInt(e.target.value, 10);
+            if (isNaN(newQty) || newQty < 1) {
+                newQty = 1;
+                e.target.value = '1';
+            }
+            updateCartItemQuantity(id, newQty);
+            return;
+        }
+
+        // Remove item
+        if (e.target.matches('.remove-item-btn')) {
+            e.preventDefault();
+            const id = e.target.dataset.id;
+            removeCartItem(id);
+            showNotification('Item removed from cart.', 'info');
+            return;
+        }
+
+        // Wishlist toggle
+        if (e.target.matches('.wishlist-btn')) {
+            e.preventDefault();
+            const id = e.target.dataset.id;
+            toggleWishlist(id);
+            showNotification('Wishlist status updated.', 'info');
+            return;
+        }
+
+        // Size & Fit link
+        if (e.target.matches('.size-fit-link')) {
+            e.preventDefault();
+            showNotification('Size & Fit guide is coming soon!', 'info');
+        }
+    }
+
+    /**
+     * Retrieve a single query parameter value by name.
+     * @param {string} param
+     * @returns {string|null}
+     */
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    /**
+     * Filter and sort products based on selected categories, price, and sort order.
+     */
+    function filterProducts() {
+        if (!productGridEl) return;
+        const selectedCategories = Array.from(categoryCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+        const maxPrice = parseFloat(priceRangeEl?.value) || Infinity;
+        const sortValue = sortSelectEl?.value || 'name-asc';
+
+        const products = Array.from(productGridEl.querySelectorAll('.product-item'));
+
+        products.forEach(prod => {
+            const category = prod.dataset.category || '';
+            const price = parseFloat(prod.dataset.price) || 0;
+            const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category);
+            const matchesPrice = price <= maxPrice;
+
+            if (matchesCategory && matchesPrice) {
+                prod.classList.remove('hidden');
+            } else {
+                prod.classList.add('hidden');
+            }
+        });
+
+        // Sort only the visible products
+        const visible = products.filter(p => !p.classList.contains('hidden'));
+        visible.sort((a, b) => {
+            const nameA = a.querySelector('h3')?.textContent.toLowerCase() || '';
+            const nameB = b.querySelector('h3')?.textContent.toLowerCase() || '';
+            const priceA = parseFloat(a.dataset.price) || 0;
+            const priceB = parseFloat(b.dataset.price) || 0;
+            switch (sortValue) {
+                case 'name-asc': return nameA.localeCompare(nameB);
+                case 'name-desc': return nameB.localeCompare(nameA);
+                case 'price-asc': return priceA - priceB;
+                case 'price-desc': return priceB - priceA;
+                default: return 0;
+            }
+        });
+
+        // Re-append in sorted order
+        visible.forEach(p => productGridEl.appendChild(p));
+    }
+
+    /**
+     * Update URL parameters based on selected filters/sort, without reloading.
+     */
+    function updateURLParams() {
+        const selectedCategories = Array.from(categoryCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+        const maxPrice = priceRangeEl?.value || '';
+        const sortValue = sortSelectEl?.value || '';
+
+        const params = new URLSearchParams();
+        if (selectedCategories.length) params.set('category', selectedCategories.join(','));
+        if (maxPrice) params.set('price', maxPrice);
+        if (sortValue) params.set('sort', sortValue);
+
+        const newUrl = window.location.pathname + '?' + params.toString();
+        window.history.replaceState({}, '', newUrl);
+    }
+
+    /**
+     * Load filters and sort values from URL query parameters, update UI.
+     */
+    function loadFiltersFromURL() {
+        const params = new URLSearchParams(window.location.search);
+
+        // Categories
+        const catParam = params.get('category');
+        if (catParam) {
+            const cats = catParam.split(',');
+            categoryCheckboxes.forEach(cb => {
+                cb.checked = cats.includes(cb.value);
+            });
+        }
+
+        // Price
+        const priceParam = params.get('price');
+        if (priceParam && priceRangeEl && priceValueEl) {
+            priceRangeEl.value = priceParam;
+            priceValueEl.textContent = `$${priceParam}`;
+        }
+
+        // Sort
+        const sortParam = params.get('sort');
+        if (sortParam && sortSelectEl) {
+            sortSelectEl.value = sortParam;
+        }
+    }
+
+    /**
+     * Handle global clicks: add-to-cart or product-item redirect.
+     */
+    function handleGlobalClick(e) {
+        // ADD TO CART
+        if (e.target.matches('.add-to-cart')) {
+            e.preventDefault();
+            const productEl = e.target.closest('.product-item');
+            if (!productEl) return;
+            const product = {
+                id: productEl.querySelector('h3')?.textContent || '',
+                name: productEl.querySelector('h3')?.textContent || '',
+                price: parseFloat(productEl.querySelector('p')?.textContent.replace('$', '')) || 0,
+                image: productEl.querySelector('img')?.src || ''
+            };
+            addToCart(product);
+            return;
+        }
+
+        // PRODUCT CARD CLICK (redirect to category page)
+        const prodItemEl = e.target.closest('.product-item');
+        if (prodItemEl && !e.target.classList.contains('add-to-cart')) {
+            const cat = prodItemEl.dataset.category;
+            if (cat) {
+                window.location.href = `products.html?category=${encodeURIComponent(cat)}`;
+            }
+        }
+    }
+
+    /**
+     * Handle search functionality (non-blocking via debounce).
+     */
+    function performSearch() {
+        const query = searchInputEl.value.trim().toLowerCase();
+        const products = document.querySelectorAll('.product-item');
+        let foundAny = false;
+
+        products.forEach(prod => {
+            const title = prod.querySelector('h3')?.textContent.toLowerCase() || '';
+            if (title.includes(query)) {
+                prod.style.display = 'block';
+                foundAny = true;
+            } else {
+                prod.style.display = 'none';
+            }
+        });
+
+        if (!foundAny) {
+            showNotification('No products found matching your search.', 'info');
+        }
+    }
+
+    /**
+     * Toggle mobile navbar: update aria-expanded, aria-hidden, and focus.
+     */
+    function toggleNavbarMenu() {
+        const expanded = hamburgerEl.getAttribute('aria-expanded') === 'true';
+        hamburgerEl.setAttribute('aria-expanded', String(!expanded));
+        navbarMenuEl.setAttribute('aria-hidden', String(expanded));
+        navbarMenuEl.classList.toggle('active');
+        if (!expanded) {
+            // Menu just opened: focus first link
+            const firstLink = navbarMenuEl.querySelector('a');
+            if (firstLink) firstLink.focus();
+        } else {
+            // Menu closed: return focus to hamburger
+            hamburgerEl.focus();
+        }
+    }
+
+    /**
+     * Close navbar (used when a link is clicked on mobile).
+     */
+    function closeNavbarMenu() {
+        hamburgerEl.setAttribute('aria-expanded', 'false');
+        navbarMenuEl.setAttribute('aria-hidden', 'true');
+        navbarMenuEl.classList.remove('active');
+        hamburgerEl.focus();
+    }
+
+    /**
+     * Setup all filter-related event listeners.
+     */
+    function setupFilterListeners() {
+        // Category checkboxes
+        categoryCheckboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                filterProducts();
+                updateURLParams();
+            });
+        });
+
+        // Price range slider
+        if (priceRangeEl) {
+            priceRangeEl.addEventListener('input', () => {
+                if (priceValueEl) priceValueEl.textContent = `$${priceRangeEl.value}`;
+                filterProducts();
+                updateURLParams();
+            });
+        }
+
+        // Sort select
+        if (sortSelectEl) {
+            sortSelectEl.addEventListener('change', () => {
+                filterProducts();
+                updateURLParams();
             });
         }
     }
 
-    // Set category filter dropdown based on URL query parameter
-    const categoryParam = getQueryParam('category');
-    const categorySelect = document.getElementById('category');
-    if (categoryParam && categorySelect) {
-        const optionExists = Array.from(categorySelect.options).some(
-            option => option.value === categoryParam
-        );
-        if (optionExists) {
-            categorySelect.value = categoryParam;
-        }
-    }
+    /**
+     * Setup search bar events, including mobile toggle.
+     */
+    function setupSearchBar() {
+        if (!searchInputEl || !searchBtnEl) return;
 
-    filterProducts(); // Initialize filter on page load
-    setupContactForm(); // Setup contact form handler
-    setupSearchBar(); // Setup enhanced search bar
-});
+        // On typing (debounced)
+        const debouncedSearch = debounce(performSearch, 300);
+        searchInputEl.addEventListener('input', debouncedSearch);
 
-// Toggle the navbar menu on mobile
-const hamburger = document.getElementById('hamburger');
-const navbarMenu = document.querySelector('.navbar-center ul');
-
-if (hamburger && navbarMenu) {
-    hamburger.addEventListener('click', () => {
-        const isActive = navbarMenu.classList.toggle('active');
-        hamburger.classList.toggle('active');
-        hamburger.setAttribute('aria-expanded', isActive);
-    });
-
-    // Close navbar when a link is clicked on mobile
-    document.querySelectorAll('.navbar a').forEach(link => {
-        link.addEventListener('click', () => {
-            navbarMenu.classList.remove('active');
-            hamburger.classList.remove('active');
-            hamburger.setAttribute('aria-expanded', 'false');
-        });
-    });
-}
-
-// Scroll to Top Button Visibility
-const scrollToTopBtn = document.getElementById('scrollToTop');
-
-if (scrollToTopBtn) {
-    window.addEventListener('scroll', () => {
-        scrollToTopBtn.style.display = window.pageYOffset > 100 ? 'block' : 'none';
-    });
-
-    // Scroll to the top when button is clicked
-    scrollToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
-
-// Filter products based on category checkboxes, price, and sort
-const filterProducts = () => {
-    const categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
-    const selectedCategories = Array.from(categoryCheckboxes).map(cb => cb.value);
-    const priceRange = document.getElementById('price');
-    const maxPrice = priceRange ? parseFloat(priceRange.value) : Infinity;
-    const sortSelect = document.getElementById('sort');
-    const sortValue = sortSelect ? sortSelect.value : 'name-asc';
-
-    const products = Array.from(document.querySelectorAll('.product-item'));
-
-    // Filter products by category and price
-    let filteredProducts = products.filter(product => {
-        const productCategory = product.getAttribute('data-category');
-        const productPrice = parseFloat(product.getAttribute('data-price')) || 0;
-        return selectedCategories.includes(productCategory) && productPrice <= maxPrice;
-    });
-
-    // Sort products
-    filteredProducts.sort((a, b) => {
-        const nameA = a.querySelector('h3')?.textContent.toLowerCase() || '';
-        const nameB = b.querySelector('h3')?.textContent.toLowerCase() || '';
-        const priceA = parseFloat(a.getAttribute('data-price')) || 0;
-        const priceB = parseFloat(b.getAttribute('data-price')) || 0;
-
-        switch (sortValue) {
-            case 'name-asc':
-                return nameA.localeCompare(nameB);
-            case 'name-desc':
-                return nameB.localeCompare(nameA);
-            case 'price-asc':
-                return priceA - priceB;
-            case 'price-desc':
-                return priceB - priceA;
-            default:
-                return 0;
-        }
-    });
-
-    // Hide all products initially
-    products.forEach(product => {
-        product.style.display = 'none';
-    });
-
-    // Show filtered and sorted products in order
-    const productGrid = document.querySelector('.product-grid');
-    if (!productGrid) return;
-
-    // Remove all product elements from grid
-    products.forEach(product => productGrid.removeChild(product));
-
-    // Append filtered products in sorted order
-    filteredProducts.forEach(product => {
-        product.style.display = 'block';
-        productGrid.appendChild(product);
-    });
-};
-
-// Update URL query parameters to persist filters and sort
-const updateURLParams = () => {
-    const categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
-    const selectedCategories = Array.from(categoryCheckboxes).map(cb => cb.value);
-    const priceRange = document.getElementById('price');
-    const maxPrice = priceRange ? priceRange.value : '';
-    const sortSelect = document.getElementById('sort');
-    const sortValue = sortSelect ? sortSelect.value : '';
-
-    const params = new URLSearchParams();
-
-    if (selectedCategories.length > 0) {
-        params.set('category', selectedCategories.join(','));
-    }
-    if (maxPrice) {
-        params.set('price', maxPrice);
-    }
-    if (sortValue) {
-        params.set('sort', sortValue);
-    }
-
-    const newUrl = window.location.pathname + '?' + params.toString();
-    window.history.replaceState({}, '', newUrl);
-};
-
-// Load filters and sort from URL query parameters
-const loadFiltersFromURL = () => {
-    const params = new URLSearchParams(window.location.search);
-
-    // Categories
-    const categoryParam = params.get('category');
-    if (categoryParam) {
-        const categories = categoryParam.split(',');
-        document.querySelectorAll('input[name="category"]').forEach(cb => {
-            cb.checked = categories.includes(cb.value);
-        });
-    }
-
-    // Price
-    const priceParam = params.get('price');
-    if (priceParam) {
-        const priceRange = document.getElementById('price');
-        const priceValue = document.getElementById('priceValue');
-        if (priceRange) {
-            priceRange.value = priceParam;
-        }
-        if (priceValue) {
-            priceValue.textContent = `$${priceParam}`;
-        }
-    }
-
-    // Sort
-    const sortParam = params.get('sort');
-    if (sortParam) {
-        const sortSelect = document.getElementById('sort');
-        if (sortSelect) {
-            sortSelect.value = sortParam;
-        }
-    }
-};
-
-// Event listeners for filters and sort
-const setupFilterListeners = () => {
-    const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
-    const priceRange = document.getElementById('price');
-    const sortSelect = document.getElementById('sort');
-
-    categoryCheckboxes.forEach(cb => {
-        cb.addEventListener('change', () => {
-            filterProducts();
-            updateURLParams();
-        });
-    });
-
-    if (priceRange) {
-        priceRange.addEventListener('input', () => {
-            const priceValue = document.getElementById('priceValue');
-            if (priceValue) {
-                priceValue.textContent = `$${priceRange.value}`;
+        // On Enter key
+        searchInputEl.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
             }
-            filterProducts();
-            updateURLParams();
         });
-    }
 
-    if (sortSelect) {
-        sortSelect.addEventListener('change', () => {
-            filterProducts();
-            updateURLParams();
-        });
-    }
-};
-
-// Initialize filters on page load
-window.addEventListener('DOMContentLoaded', () => {
-    loadFiltersFromURL();
-    filterProducts();
-    setupFilterListeners();
-});
-
-// Add event listeners for filtering if elements exist
-const categorySelect = document.getElementById('category');
-const priceRange = document.getElementById('price');
-
-if (categorySelect) {
-    categorySelect.addEventListener('change', filterProducts);
-}
-if (priceRange) {
-    priceRange.addEventListener('input', () => {
-        const priceValue = document.getElementById('priceValue');
-        if (priceValue) {
-            priceValue.textContent = `$${priceRange.value}`;
-        }
-        filterProducts();
-    });
-}
-
-// Search bar functionality
-const searchInput = document.querySelector('.search-bar input[type="text"]');
-const searchButton = document.querySelector('.search-bar button');
-
-const performSearch = () => {
-    const query = searchInput.value.trim().toLowerCase();
-    const products = document.querySelectorAll('.product-item');
-    let found = false;
-
-    products.forEach(product => {
-        const title = product.querySelector('h3')?.textContent.toLowerCase() || '';
-        if (title.includes(query)) {
-            product.style.display = 'block';
-            found = true;
-        } else {
-            product.style.display = 'none';
-        }
-    });
-
-    if (!found) {
-        alert('No products found matching your search.');
-    }
-};
-
-if (searchButton && searchInput) {
-    searchButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        performSearch();
-    });
-
-    searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+        // On clicking the search button
+        searchBtnEl.addEventListener('click', e => {
             e.preventDefault();
             performSearch();
+        });
+
+        // Mobile toggle: clicking anywhere in the search bar area toggles input visibility
+        const searchBarWrapper = document.querySelector('.search-bar');
+        if (searchBarWrapper) {
+            searchBarWrapper.addEventListener('click', e => {
+                if (window.innerWidth <= 767) {
+                    const input = searchBarWrapper.querySelector('input');
+                    const btn = searchBarWrapper.querySelector('button');
+                    if (e.target === input || e.target === btn) return;
+                    if (input.style.display === 'block') {
+                        input.style.display = 'none';
+                        if (btn) btn.style.display = 'none';
+                    } else {
+                        input.style.display = 'block';
+                        if (btn) btn.style.display = 'inline-block';
+                        input.focus();
+                    }
+                }
+            });
         }
-    });
-}
-
-// Enhanced search bar setup for mobile toggle
-function setupSearchBar() {
-    const searchBar = document.querySelector('.search-bar');
-    if (!searchBar) return;
-
-    // For mobile, toggle search input visibility on clicking the search icon (::after content)
-    searchBar.addEventListener('click', (e) => {
-        if (window.innerWidth <= 767) {
-            const input = searchBar.querySelector('input');
-            const button = searchBar.querySelector('button');
-            if (e.target === input || e.target === button) {
-                return; // Ignore clicks on input or button
-            }
-            if (input.style.display === 'block') {
-                input.style.display = 'none';
-                if (button) button.style.display = 'none';
-            } else {
-                input.style.display = 'block';
-                if (button) button.style.display = 'inline-block';
-                input.focus();
-            }
-        }
-    });
-}
-
-// Contact form submission handling
-function setupContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    if (!contactForm) return;
-
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const name = contactForm.name.value.trim();
-        const email = contactForm.email.value.trim();
-        const subject = contactForm.subject.value.trim();
-        const message = contactForm.message.value.trim();
-
-        if (!name || !email || !subject || !message) {
-            alert('Please fill in all fields.');
-            return;
-        }
-
-        // Basic email format validation
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
-
-        // Here you can add code to send the form data to a server if needed
-
-        alert('Thank you for contacting us, ' + name + '! We will get back to you shortly.');
-
-        contactForm.reset();
-    });
-}
-
-// Render cart items dynamically on the cart page
-function renderCart() {
-    const cartItemsContainer = document.querySelector('.cart-items');
-    const cartTotalElement = document.getElementById('cart-total');
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const itemsTotalElement = document.getElementById('items-total');
-    const taxesElement = document.getElementById('taxes');
-    const shippingCostElement = document.getElementById('shipping-cost');
-    const discountElement = document.getElementById('discount');
-    const couponMessage = document.getElementById('coupon-message');
-
-    if (!cartItemsContainer || !cartTotalElement || !checkoutBtn || !itemsTotalElement || !taxesElement || !shippingCostElement || !discountElement) return;
-
-    const cart = getCartItems();
-
-    // Clear existing items
-    cartItemsContainer.innerHTML = '';
-    couponMessage.textContent = '';
-
-    if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-        itemsTotalElement.textContent = '0.00';
-        taxesElement.textContent = '0.00';
-        shippingCostElement.textContent = '0.00';
-        discountElement.textContent = '0.00';
-        cartTotalElement.textContent = '0.00';
-        checkoutBtn.disabled = true;
-        updateCartCount();
-        return;
     }
 
-    // Create cart item elements
-    cart.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'cart-item';
-
-        // Stock alert if stock is low (less than 5)
-        const stockAlert = item.stock !== undefined && item.stock < 5 ? `<p class="stock-alert">Only ${item.stock} left in stock!</p>` : '';
-
-        // Wishlist button text based on wishlist status
-        const wishlistText = item.inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist';
-
-        itemDiv.innerHTML = `
-            <img src="${item.image}" alt="${item.name}" class="cart-item-image" />
-            <div class="cart-item-details">
-                <h3 class="cart-item-name">${item.name}</h3>
-                <p>Size: ${item.size || 'N/A'}</p>
-                <p>Color: ${item.color || 'N/A'}</p>
-                <p class="cart-item-price">$${item.price.toFixed(2)}</p>
-                ${stockAlert}
-                <div class="cart-item-quantity">
-                    <label for="quantity-${index}">Quantity:</label>
-                    <input type="number" id="quantity-${index}" min="1" value="${item.quantity}" />
-                </div>
-                <button class="btn btn-danger remove-item-btn" data-index="${index}">Remove</button>
-                <button class="btn btn-wishlist wishlist-btn" data-index="${index}">${wishlistText}</button>
-                <p><a href="#" class="size-fit-link">Size & Fit Guide</a></p>
-            </div>
-        `;
-
-        cartItemsContainer.appendChild(itemDiv);
-    });
-
-    // Calculate price breakdown
-    const itemsTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const taxes = itemsTotal * 0.08; // 8% tax
-    const shippingCost = calculateShippingCost();
-    const discount = getDiscountAmount();
-
-    const grandTotal = itemsTotal + taxes + shippingCost - discount;
-
-    itemsTotalElement.textContent = itemsTotal.toFixed(2);
-    taxesElement.textContent = taxes.toFixed(2);
-    shippingCostElement.textContent = shippingCost.toFixed(2);
-    discountElement.textContent = discount.toFixed(2);
-    cartTotalElement.textContent = grandTotal.toFixed(2);
-
-    // Enable checkout button
-    checkoutBtn.disabled = false;
-
-    updateCartCount();
-
-    // Add event listeners for quantity changes and remove buttons
-    cartItemsContainer.querySelectorAll('input[type="number"]').forEach(input => {
-        input.addEventListener('change', (e) => {
-            const index = parseInt(e.target.id.split('-')[1]);
-            let newQuantity = parseInt(e.target.value);
-            if (isNaN(newQuantity) || newQuantity < 1) {
-                newQuantity = 1;
-                e.target.value = '1';
-            }
-            const cart = getCartItems();
-            cart[index].quantity = newQuantity;
-            saveCartItems(cart);
-            renderCart();
-        });
-    });
-
-    cartItemsContainer.querySelectorAll('.remove-item-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const index = parseInt(e.target.getAttribute('data-index'));
-            let cart = getCartItems();
-            cart.splice(index, 1);
-            saveCartItems(cart);
-            renderCart();
-        });
-    });
-
-    // Add event listeners for wishlist buttons
-    cartItemsContainer.querySelectorAll('.wishlist-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const index = parseInt(e.target.getAttribute('data-index'));
-            let cart = getCartItems();
-            cart[index].inWishlist = !cart[index].inWishlist;
-            saveCartItems(cart);
-            renderCart();
-        });
-    });
-
-    // Add event listeners for size & fit guide links
-    cartItemsContainer.querySelectorAll('.size-fit-link').forEach(link => {
-        link.addEventListener('click', (e) => {
+    /**
+     * Basic contact form validation and feedback.
+     */
+    function setupContactForm() {
+        if (!contactFormEl) return;
+        contactFormEl.addEventListener('submit', e => {
             e.preventDefault();
-            alert('Size & Fit guide is coming soon!');
+            const name = contactFormEl.name.value.trim();
+            const email = contactFormEl.email.value.trim();
+            const subject = contactFormEl.subject.value.trim();
+            const message = contactFormEl.message.value.trim();
+
+            if (!name || !email || !subject || !message) {
+                showNotification('Please fill in all fields.', 'error');
+                return;
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                showNotification('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            // (You can add a fetch/ajax call here to send data to your server.)
+            showNotification(`Thank you, ${name}! We'll get back to you soon.`, 'success');
+            contactFormEl.reset();
         });
-    });
-}
+    }
 
-// Calculate shipping cost based on ZIP code or default
-function calculateShippingCost() {
-    const shippingZip = document.getElementById('shipping-zip')?.value.trim();
-    if (!shippingZip) {
-        return 5.00; // Default shipping cost
-    }
-    // Simple mock: if ZIP starts with 9, cheaper shipping
-    if (shippingZip.startsWith('9')) {
-        return 3.50;
-    }
-    return 7.00;
-}
+    /**
+     * On page load, initialize cart count and render cart if on cart page.
+     */
+    function setupCart() {
+        updateCartCount();
 
-// Coupon code logic
-let appliedCoupon = null;
-const coupons = {
-    'SAVE10': 0.10, // 10% discount
-    'FREESHIP': 'free-shipping', // free shipping
-};
+        if (cartItemsContainer) {
+            // We are on the cart page
+            renderCartItems();
 
-function getDiscountAmount() {
-    if (!appliedCoupon) return 0;
-    const cart = getCartItems();
-    const itemsTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    if (appliedCoupon === 'free-shipping') {
-        return calculateShippingCost();
-    }
-    if (typeof appliedCoupon === 'number') {
-        return itemsTotal * appliedCoupon;
-    }
-    return 0;
-}
+            // Attach event listeners for quantity, remove, wishlist, size/fit
+            document.body.addEventListener('click', handleCartPageClick);
+        }
 
-document.getElementById('apply-coupon-btn')?.addEventListener('click', () => {
-    const couponInput = document.getElementById('coupon-code');
-    const couponMessage = document.getElementById('coupon-message');
-    const code = couponInput.value.trim().toUpperCase();
-    if (coupons.hasOwnProperty(code)) {
-        appliedCoupon = coupons[code];
-        couponMessage.textContent = `Coupon "${code}" applied!`;
-    } else {
-        appliedCoupon = null;
-        couponMessage.textContent = 'Invalid coupon code.';
-    }
-    renderCart();
-});
+        // Coupon code apply
+        if (applyCouponBtn) {
+            applyCouponBtn.addEventListener('click', e => {
+                e.preventDefault();
+                applyCoupon();
+            });
+        }
 
-// Shipping estimation button
-document.getElementById('estimate-shipping-btn')?.addEventListener('click', () => {
-    const shippingZip = document.getElementById('shipping-zip')?.value.trim();
-    const shippingEstimateMessage = document.getElementById('shipping-estimate-message');
-    if (!shippingZip) {
-        shippingEstimateMessage.textContent = 'Please enter a ZIP/Postal Code.';
-        return;
+        // Shipping estimate
+        if (estimateShippingBtn) {
+            estimateShippingBtn.addEventListener('click', e => {
+                e.preventDefault();
+                estimateShipping();
+            });
+        }
     }
-    // Mock estimation logic
-    if (shippingZip.match(/^\d{5}$/)) {
-        shippingEstimateMessage.textContent = `Estimated shipping cost: $${calculateShippingCost().toFixed(2)}`;
-    } else {
-        shippingEstimateMessage.textContent = 'Invalid ZIP/Postal Code format.';
+
+    /**
+     * Initialize everything once DOM is ready.
+     */
+    function init() {
+        // 1. Global click handler: add to cart / product redirect
+        document.body.addEventListener('click', handleGlobalClick);
+
+        // 2. Setup cart logic (if on cart page)
+        setupCart();
+
+        // 3. Category from URL (on product listing page)
+        const catParam = getQueryParam('category');
+        const categorySelectDropdown = document.getElementById('category');
+        if (catParam && categorySelectDropdown) {
+            const optExists = Array.from(categorySelectDropdown.options).some(
+                opt => opt.value === catParam
+            );
+            if (optExists) categorySelectDropdown.value = catParam;
+        }
+
+        // 4. Filters: load from URL, then filter & set listeners
+        loadFiltersFromURL();
+        filterProducts();
+        setupFilterListeners();
+
+        // 5. Navbar toggle (mobile) & close on link click
+        if (hamburgerEl && navbarMenuEl) {
+            hamburgerEl.addEventListener('click', toggleNavbarMenu);
+            // Close menu when any link is clicked
+            navbarMenuEl.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeNavbarMenu);
+            });
+        }
+
+        // 6. Scroll-to-top button
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        if (scrollToTopBtn) {
+            window.addEventListener('scroll', () => {
+                scrollToTopBtn.style.display = window.pageYOffset > 100 ? 'block' : 'none';
+            });
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // 7. Search bar setup (desktop + mobile)
+        setupSearchBar();
+
+        // 8. Contact form
+        setupContactForm();
     }
-});
+
+    // Wait for the DOM fully loaded, then run init
+    window.addEventListener('DOMContentLoaded', init);
+
+})();
