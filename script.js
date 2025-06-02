@@ -36,6 +36,7 @@
 
     // Navbar toggle
     const hamburgerEl = document.getElementById('hamburger');
+    const navbarDropdownEl = document.getElementById('navbarDropdown');
     const navbarMenuEl = document.getElementById('navbarMenu'); // Should match aria-controls in HTML
 
     // Contact form
@@ -558,6 +559,23 @@
     }
 
     /**
+     * Toggle mobile navbar dropdown
+     */
+    function toggleNavbarDropdown() {
+        if (!navbarDropdownEl || !hamburgerEl) return;
+        const isActive = navbarDropdownEl.classList.contains('active');
+        if (isActive) {
+            navbarDropdownEl.classList.remove('active');
+            navbarDropdownEl.setAttribute('aria-hidden', 'true');
+            hamburgerEl.setAttribute('aria-expanded', 'false');
+        } else {
+            navbarDropdownEl.classList.add('active');
+            navbarDropdownEl.setAttribute('aria-hidden', 'false');
+            hamburgerEl.setAttribute('aria-expanded', 'true');
+        }
+    }
+
+    /**
      * Close navbar (used when a link is clicked on mobile).
      */
     function closeNavbarMenu() {
@@ -728,11 +746,34 @@
         setupFilterListeners();
 
         // 5. Navbar toggle (mobile) & close on link click
-        if (hamburgerEl && navbarMenuEl) {
-            hamburgerEl.addEventListener('click', toggleNavbarMenu);
-            // Close menu when any link is clicked
-            navbarMenuEl.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', closeNavbarMenu);
+        if (hamburgerEl && navbarDropdownEl) {
+            hamburgerEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleNavbarDropdown();
+            });
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (navbarDropdownEl.classList.contains('active') && !navbarDropdownEl.contains(e.target) && e.target !== hamburgerEl) {
+                    navbarDropdownEl.classList.remove('active');
+                    navbarDropdownEl.setAttribute('aria-hidden', 'true');
+                    hamburgerEl.setAttribute('aria-expanded', 'false');
+                }
+            });
+            // Close dropdown on resize above 768px
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    navbarDropdownEl.classList.remove('active');
+                    navbarDropdownEl.setAttribute('aria-hidden', 'true');
+                    hamburgerEl.setAttribute('aria-expanded', 'false');
+                }
+            });
+            // Close dropdown when a link is clicked
+            navbarDropdownEl.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navbarDropdownEl.classList.remove('active');
+                    navbarDropdownEl.setAttribute('aria-hidden', 'true');
+                    hamburgerEl.setAttribute('aria-expanded', 'false');
+                });
             });
         }
 

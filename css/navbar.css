@@ -179,6 +179,61 @@ header {
     }
 }
 
+/* Navbar Dropdown (for mobile menu) */
+.navbar-dropdown {
+    position: absolute;
+    top: 100%; /* Just below navbar */
+    left: auto;
+    right: 5%; /* Align with navbar padding */
+    background: var(--secondary-color);
+    color: var(--text-color);
+    min-width: 180px;
+    max-width: 90vw;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    padding: 10px 0;
+    z-index: 1100;
+    display: none;
+    flex-direction: column;
+    animation: fadeIn 0.3s;
+}
+
+.navbar-dropdown.active {
+    display: flex;
+}
+
+.navbar-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-dropdown ul li {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-dropdown ul li a {
+    display: block;
+    padding: 12px 24px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.navbar-dropdown ul li a:hover,
+.navbar-dropdown ul li a.active {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+@media (min-width: 768px) {
+    .navbar-dropdown {
+        display: none !important;
+    }
+}
+
 /* Responsive Design */
 
 /* Mobile Devices: 320px to 480px */
