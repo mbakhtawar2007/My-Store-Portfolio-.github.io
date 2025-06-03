@@ -209,14 +209,24 @@
         }
     }
 
+    // --- Cart count sync for desktop cart icon ---
+    function updateDesktopCartCount() {
+        const desktopCartCount = document.querySelector('.navbar-cart.desktop-cart .cart-count');
+        if (desktopCartCount && cartCountEl) {
+            desktopCartCount.textContent = cartCountEl.textContent;
+        }
+    }
+
     // Patch updateCartCount to also update dropdown
     const origUpdateCartCount = updateCartCount;
     window.updateCartCount = function() {
         origUpdateCartCount();
         updateDropdownCartCount();
+        updateDesktopCartCount();
     };
     // Initial sync on load
     updateDropdownCartCount();
+    updateDesktopCartCount();
 
     /**
      * Add a product object to the cart (in localStorage), or increment quantity if it already exists.

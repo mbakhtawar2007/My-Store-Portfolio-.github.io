@@ -267,6 +267,44 @@ header {
     pointer-events: none;
 }
 
+/* Cart Icon for Desktop */
+.navbar-cart.desktop-cart {
+    display: none;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+.navbar-cart .cart-icon {
+    font-size: 1.5rem;
+    margin-right: 4px;
+    color: var(--primary-color);
+}
+
+.navbar-cart .cart-count {
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 2px 7px;
+    border-radius: 50%;
+    margin-left: 2px;
+    position: static;
+}
+
+@media (min-width: 768px) {
+    .navbar-cart.desktop-cart {
+        display: flex;
+    }
+    .navbar-right {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar-cart.desktop-cart {
+        display: none !important;
+    }
+}
+
 /* Responsive Design */
 
 /* Mobile Devices: 320px to 480px */
