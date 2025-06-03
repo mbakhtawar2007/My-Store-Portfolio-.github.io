@@ -44,14 +44,18 @@
                 </ul>
             </div>
             <div class="navbar-right">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search products..." aria-label="Search products">
-                    <button aria-label="Search">Search</button>
-                </div>
                 <div class="user-cart">
                     <a href="cart.html" aria-label="View Cart">Cart <span class="cart-count"
                             aria-hidden="true">3</span></a>
                 </div>
+            </div>
+            <div class="navbar-search">
+                <form id="navbarSearchForm" action="#" role="search" autocomplete="off">
+                    <input type="text" id="navbarSearchInput" placeholder="Search products..." aria-label="Search products">
+                    <button type="submit" aria-label="Search">
+                        <span class="search-icon">🔍</span>
+                    </button>
+                </form>
             </div>
             <div class="hamburger" id="hamburger" aria-label="Toggle Menu" aria-expanded="false">
                 <span></span>

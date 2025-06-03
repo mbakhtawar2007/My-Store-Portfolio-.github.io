@@ -78,41 +78,6 @@ header {
     gap: 20px;
 }
 
-/* Search Bar */
-.search-bar {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.search-bar input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    width: 150px;
-    transition: width 0.3s ease, border-color 0.3s ease;
-}
-
-.search-bar input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
-.search-bar button {
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: 5px;
-    color: var(--text-color);
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-    background-color: var(--hover-color);
-}
-
 /* User Cart */
 .user-cart a {
     text-decoration: none;
@@ -228,10 +193,52 @@ header {
     color: #fff;
 }
 
-@media (min-width: 768px) {
-    .navbar-dropdown {
-        display: none !important;
-    }
+/* Search Bar Styles */
+.navbar-search {
+    display: flex;
+    align-items: center;
+    margin: 0 1rem;
+}
+
+.navbar-search form {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    padding: 2px 8px 2px 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.navbar-search input[type="text"] {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 6px 0;
+    width: 140px;
+    transition: width 0.3s;
+}
+
+.navbar-search input[type="text"]:focus {
+    width: 200px;
+}
+
+.navbar-search button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 6px;
+    font-size: 1.1rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-search .search-icon {
+    font-size: 1.1em;
+    pointer-events: none;
 }
 
 /* Responsive Design */
@@ -246,13 +253,23 @@ header {
         font-size: 1.5rem;
     }
 
-    .search-bar input {
-        width: 100px;
-    }
-
     .cart-count {
         font-size: 0.7rem;
         padding: 2px 6px;
+    }
+
+    .navbar-search {
+        margin: 0.5rem 0;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .navbar-search input[type="text"] {
+        width: 90px;
+    }
+
+    .navbar-search input[type="text"]:focus {
+        width: 140px;
     }
 }
 
@@ -265,10 +282,6 @@ header {
     .logo {
         font-size: 1.6rem;
     }
-
-    .search-bar input {
-        width: 130px;
-    }
 }
 
 /* Laptops/Small Screens: 769px to 1024px */
@@ -280,10 +293,6 @@ header {
     .logo {
         font-size: 1.7rem;
     }
-
-    .search-bar input {
-        width: 180px;
-    }
 }
 
 /* Desktops/Large Screens: 1025px to 1200px */
@@ -291,20 +300,12 @@ header {
     .navbar {
         padding: 15px 8%;
     }
-
-    .search-bar input {
-        width: 220px;
-    }
 }
 
 /* Extra-Large Devices: 1201px and above */
 @media (min-width: 1201px) {
     .navbar {
         padding: 15px 12%;
-    }
-
-    .search-bar input {
-        width: 280px;
     }
 
     .logo {
@@ -330,21 +331,6 @@ header {
         display: flex;
     }
 
-    .search-bar input {
-        width: 100%;
-    }
-
-    .search-bar button {
-        display: none;
-    }
-
-    .search-bar::after {
-        content: "🔍";
-        font-size: 1.5rem;
-        margin-left: 10px;
-        cursor: pointer;
-    }
-
     .hamburger {
         display: flex;
     }
@@ -364,19 +350,11 @@ header {
     .hamburger {
         display: none;
     }
-
-    .search-bar input {
-        width: 200px;
-    }
 }
 
 /* From 1024px (Desktops and above) */
 @media (min-width: 1024px) {
     .navbar {
         padding: 15px 10%;
-    }
-
-    .search-bar input {
-        width: 250px;
     }
 }

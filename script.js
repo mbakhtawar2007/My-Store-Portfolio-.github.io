@@ -30,10 +30,6 @@
     const sortSelectEl = document.getElementById('sort');
     const productGridEl = document.querySelector('.product-grid');
 
-    // Search elements
-    const searchInputEl = document.querySelector('.search-bar input[type="text"]');
-    const searchBtnEl = document.querySelector('.search-bar button');
-
     // Navbar toggle
     const hamburgerEl = document.getElementById('hamburger');
     const navbarDropdownEl = document.getElementById('navbarDropdown');
@@ -41,6 +37,23 @@
 
     // Contact form
     const contactFormEl = document.getElementById('contactForm');
+
+    // --- Search Bar Functionality ---
+    const navbarSearchForm = document.getElementById('navbarSearchForm');
+    const navbarSearchInput = document.getElementById('navbarSearchInput');
+
+    if (navbarSearchForm && navbarSearchInput) {
+        navbarSearchForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const query = navbarSearchInput.value.trim();
+            if (query.length > 0) {
+                // Redirect to products.html with search param
+                window.location.href = `./products.html?search=${encodeURIComponent(query)}`;
+            } else {
+                navbarSearchInput.focus();
+            }
+        });
+    }
 
     // --- Utility Functions ---
 
@@ -405,9 +418,9 @@
         const maxPrice = parseFloat(priceRangeEl?.value) || Infinity;
         const sortValue = sortSelectEl?.value || 'name-asc';
 
-        const products = Array.from(productGridEl.querySelectorAll('.product-item'));
+        let items = Array.from(document.querySelectorAll('.product-item'));
 
-        products.forEach(prod => {
+        items.forEach(prod => {
             const category = prod.dataset.category || '';
             const price = parseFloat(prod.dataset.price) || 0;
             const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category);
@@ -420,8 +433,11 @@
             }
         });
 
+        // Filter by search query if present
+        items = filterProductsBySearch(items);
+
         // Sort only the visible products
-        const visible = products.filter(p => !p.classList.contains('hidden'));
+        const visible = items.filter(p => !p.classList.contains('hidden'));
         visible.sort((a, b) => {
             const nameA = a.querySelector('h3')?.textContent.toLowerCase() || '';
             const nameB = b.querySelector('h3')?.textContent.toLowerCase() || '';
@@ -438,6 +454,20 @@
 
         // Re-append in sorted order
         visible.forEach(p => productGridEl.appendChild(p));
+    }
+
+    /**
+     * If a search query is present in the URL, filter products by name/title.
+     */
+    function filterProductsBySearch(products) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const search = urlParams.get('search');
+        if (!search) return products;
+        const searchLower = search.toLowerCase();
+        return products.filter(item => {
+            const name = item.querySelector('h3')?.textContent?.toLowerCase() || '';
+            return name.includes(searchLower);
+        });
     }
 
     /**
@@ -518,29 +548,6 @@
     }
 
     /**
-     * Handle search functionality (non-blocking via debounce).
-     */
-    function performSearch() {
-        const query = searchInputEl.value.trim().toLowerCase();
-        const products = document.querySelectorAll('.product-item');
-        let foundAny = false;
-
-        products.forEach(prod => {
-            const title = prod.querySelector('h3')?.textContent.toLowerCase() || '';
-            if (title.includes(query)) {
-                prod.style.display = 'block';
-                foundAny = true;
-            } else {
-                prod.style.display = 'none';
-            }
-        });
-
-        if (!foundAny) {
-            showNotification('No products found matching your search.', 'info');
-        }
-    }
-
-    /**
      * Toggle mobile navbar: update aria-expanded, aria-hidden, and focus.
      */
     function toggleNavbarMenu() {
@@ -611,51 +618,6 @@
             sortSelectEl.addEventListener('change', () => {
                 filterProducts();
                 updateURLParams();
-            });
-        }
-    }
-
-    /**
-     * Setup search bar events, including mobile toggle.
-     */
-    function setupSearchBar() {
-        if (!searchInputEl || !searchBtnEl) return;
-
-        // On typing (debounced)
-        const debouncedSearch = debounce(performSearch, 300);
-        searchInputEl.addEventListener('input', debouncedSearch);
-
-        // On Enter key
-        searchInputEl.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                performSearch();
-            }
-        });
-
-        // On clicking the search button
-        searchBtnEl.addEventListener('click', e => {
-            e.preventDefault();
-            performSearch();
-        });
-
-        // Mobile toggle: clicking anywhere in the search bar area toggles input visibility
-        const searchBarWrapper = document.querySelector('.search-bar');
-        if (searchBarWrapper) {
-            searchBarWrapper.addEventListener('click', e => {
-                if (window.innerWidth <= 767) {
-                    const input = searchBarWrapper.querySelector('input');
-                    const btn = searchBarWrapper.querySelector('button');
-                    if (e.target === input || e.target === btn) return;
-                    if (input.style.display === 'block') {
-                        input.style.display = 'none';
-                        if (btn) btn.style.display = 'none';
-                    } else {
-                        input.style.display = 'block';
-                        if (btn) btn.style.display = 'inline-block';
-                        input.focus();
-                    }
-                }
             });
         }
     }
@@ -787,9 +749,6 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
-
-        // 7. Search bar setup (desktop + mobile)
-        setupSearchBar();
 
         // 8. Contact form
         setupContactForm();
