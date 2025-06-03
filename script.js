@@ -3,57 +3,69 @@
 (() => {
     'use strict';
 
+    // --- Constants ---
+    const TAX_RATE = 0.08;
+    const SHIPPING_DEFAULT = 5.0;
+    const SHIPPING_WEST_COAST = 3.5;
+    const SHIPPING_REST = 7.0;
+    const COUPONS = {
+        SAVE10: 0.10,       // 10% off
+        FREESHIP: 'free',   // free shipping
+    };
+
     // --- Cached Selectors ---
     // Notification banner (for inline feedback instead of alert)
-    const notifEl = document.getElementById('notification'); // <div id="notification" aria-live="polite"></div>
+    const notifEl = document.getElementById('notification');
+    if (notifEl) {
+        notifEl.setAttribute('role', 'status');
+        notifEl.setAttribute('aria-live', 'polite');
+    }
 
     // Cart elements
-    const cartCountEl = document.querySelector('.cart-count');
-    const cartItemsContainer = document.querySelector('.cart-items');
-    const itemsTotalEl = document.getElementById('items-total');
-    const taxesEl = document.getElementById('taxes');
-    const shippingCostEl = document.getElementById('shipping-cost');
-    const discountEl = document.getElementById('discount');
-    const cartTotalEl = document.getElementById('cart-total');
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const couponInputEl = document.getElementById('coupon-code');
-    const applyCouponBtn = document.getElementById('apply-coupon-btn');
-    const shippingZipEl = document.getElementById('shipping-zip');
-    const estimateShippingBtn = document.getElementById('estimate-shipping-btn');
-    const shippingEstimateMessageEl = document.getElementById('shipping-estimate-message');
-    const couponMessageEl = document.getElementById('coupon-message');
+    const cartEls = {
+        count: document.querySelector('.cart-count'),
+        itemsContainer: document.querySelector('.cart-items'),
+        itemsTotal: document.getElementById('items-total'),
+        taxes: document.getElementById('taxes'),
+        shippingCost: document.getElementById('shipping-cost'),
+        discount: document.getElementById('discount'),
+        cartTotal: document.getElementById('cart-total'),
+        checkoutBtn: document.getElementById('checkout-btn'),
+        couponInput: document.getElementById('coupon-code'),
+        applyCouponBtn: document.getElementById('apply-coupon-btn'),
+        couponMessage: document.getElementById('coupon-message'),
+        shippingZip: document.getElementById('shipping-zip'),
+        estimateShippingBtn: document.getElementById('estimate-shipping-btn'),
+        shippingEstimateMessage: document.getElementById('shipping-estimate-message'),
+        dropdownCartCount: document.querySelector('.navbar-dropdown .dropdown-cart .cart-count'),
+        desktopCartCount: document.querySelector('.navbar-cart.desktop-cart .cart-count')
+    };
 
     // Filter & Sort elements
-    const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
-    const priceRangeEl = document.getElementById('price');
-    const priceValueEl = document.getElementById('priceValue');
-    const sortSelectEl = document.getElementById('sort');
-    const productGridEl = document.querySelector('.product-grid');
+    const filterEls = {
+        categoryCheckboxes: document.querySelectorAll('input[name="category"]'),
+        priceRange: document.getElementById('price'),
+        priceValue: document.getElementById('priceValue'),
+        sortSelect: document.getElementById('sort'),
+        productGrid: document.querySelector('.product-grid')
+    };
 
     // Navbar toggle
-    const hamburgerEl = document.getElementById('hamburger');
-    const navbarDropdownEl = document.getElementById('navbarDropdown');
-    const navbarMenuEl = document.getElementById('navbarMenu'); // Should match aria-controls in HTML
+    const navbarEls = {
+        hamburger: document.getElementById('hamburger'),
+        navbarDropdown: document.getElementById('navbarDropdown'),
+        navbarMenu: document.getElementById('navbarMenu'),
+        scrollToTopBtn: document.getElementById('scrollToTop')
+    };
 
     // Contact form
-    const contactFormEl = document.getElementById('contactForm');
+    const contactEl = {
+        form: document.getElementById('contactForm')
+    };
 
-    // --- Search Bar Functionality ---
+    // Search Bar
     const navbarSearchForm = document.getElementById('navbarSearchForm');
     const navbarSearchInput = document.getElementById('navbarSearchInput');
-
-    if (navbarSearchForm && navbarSearchInput) {
-        navbarSearchForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const query = navbarSearchInput.value.trim();
-            if (query.length > 0) {
-                // Redirect to products.html with search param
-                window.location.href = `./products.html?search=${encodeURIComponent(query)}`;
-            } else {
-                navbarSearchInput.focus();
-            }
-        });
-    }
 
     // --- Utility Functions ---
 
@@ -65,10 +77,10 @@
     function showNotification(msg, type = 'info') {
         if (!notifEl) return;
         notifEl.textContent = msg;
-        notifEl.className = `show ${type}`; // e.g. .show.success or .show.error
+        notifEl.classList.add('show', type);
         // Automatically clear after 3s
         setTimeout(() => {
-            notifEl.className = '';
+            notifEl.classList.remove('show', type);
             notifEl.textContent = '';
         }, 3000);
     }
@@ -129,16 +141,16 @@
     }
 
     /**
-     * Calculate shipping cost. If ZIP (5 digits) starts with '9', cost is $3.50, else $7.00, default $5.00.
+     * Calculate shipping cost. If ZIP (5 digits) starts with '9', cost is WEST_COAST, else REST, default DEFAULT.
      * @returns {number}
      */
     function calculateShippingCost() {
-        const zip = shippingZipEl?.value.trim() || '';
-        if (!zip) return 5.0;
+        const zip = cartEls.shippingZip?.value.trim() || '';
+        if (!zip) return SHIPPING_DEFAULT;
         if (/^\d{5}$/.test(zip)) {
-            return zip.startsWith('9') ? 3.5 : 7.0;
+            return zip.startsWith('9') ? SHIPPING_WEST_COAST : SHIPPING_REST;
         }
-        return 5.0; // fallback default if format not exactly 5 digits
+        return SHIPPING_DEFAULT; // fallback default if format not exactly 5 digits
     }
 
     /**
@@ -148,16 +160,10 @@
      */
     function getDiscountAmount(itemsTotal) {
         const code = getAppliedCouponCode();
-        if (!code) return 0;
-        const coupons = {
-            'SAVE10': 0.10,       // 10% off
-            'FREESHIP': 'free',   // free shipping
-        };
-        if (!coupons.hasOwnProperty(code)) return 0;
-
-        const val = coupons[code];
+        if (!code || !COUPONS.hasOwnProperty(code)) return 0;
+        const val = COUPONS[code];
         if (val === 'free') {
-            return calculateShippingCost(); // full shipping cost waived
+            return calculateShippingCost();
         }
         if (typeof val === 'number') {
             return itemsTotal * val;
@@ -166,13 +172,13 @@
     }
 
     /**
-     * Calculate price breakdown: items total, tax (8%), shipping, discount, grand total.
+     * Calculate price breakdown: items total, tax, shipping, discount, grand total.
      * @returns {{itemsTotal:number, tax:number, shipping:number, discount:number, grandTotal:number}}
      */
     function calculatePriceBreakdown() {
         const cart = getCartItems();
         const itemsTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        const tax = parseFloat((itemsTotal * 0.08).toFixed(2));
+        const tax = parseFloat((itemsTotal * TAX_RATE).toFixed(2));
         const shipping = calculateShippingCost();
         const discount = parseFloat(getDiscountAmount(itemsTotal).toFixed(2));
         const grandTotal = parseFloat((itemsTotal + tax + shipping - discount).toFixed(2));
@@ -184,42 +190,44 @@
      */
     function renderPriceBreakdown() {
         const { itemsTotal, tax, shipping, discount, grandTotal } = calculatePriceBreakdown();
-        if (itemsTotalEl) itemsTotalEl.textContent = itemsTotal.toFixed(2);
-        if (taxesEl) taxesEl.textContent = tax.toFixed(2);
-        if (shippingCostEl) shippingCostEl.textContent = shipping.toFixed(2);
-        if (discountEl) discountEl.textContent = discount.toFixed(2);
-        if (cartTotalEl) cartTotalEl.textContent = grandTotal.toFixed(2);
+        if (cartEls.itemsTotal) cartEls.itemsTotal.textContent = itemsTotal.toFixed(2);
+        if (cartEls.taxes) cartEls.taxes.textContent = tax.toFixed(2);
+        if (cartEls.shippingCost) cartEls.shippingCost.textContent = shipping.toFixed(2);
+        if (cartEls.discount) cartEls.discount.textContent = discount.toFixed(2);
+        if (cartEls.cartTotal) cartEls.cartTotal.textContent = grandTotal.toFixed(2);
     }
 
     /**
      * Update the cart count badge (sum of all quantities).
      */
     function updateCartCount() {
-        if (!cartCountEl) return;
+        if (!cartEls.count) return;
         const cart = getCartItems();
         const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCountEl.textContent = totalCount;
+        cartEls.count.textContent = totalCount;
     }
 
-    // --- Cart count sync for dropdown cart button ---
+    /**
+     * Update the cart count in the navbar dropdown.
+     */
     function updateDropdownCartCount() {
-        const dropdownCartCount = document.querySelector('.navbar-dropdown .dropdown-cart .cart-count');
-        if (dropdownCartCount && cartCountEl) {
-            dropdownCartCount.textContent = cartCountEl.textContent;
+        if (cartEls.dropdownCartCount && cartEls.count) {
+            cartEls.dropdownCartCount.textContent = cartEls.count.textContent;
         }
     }
 
-    // --- Cart count sync for desktop cart icon ---
+    /**
+     * Update the cart count in the desktop cart icon.
+     */
     function updateDesktopCartCount() {
-        const desktopCartCount = document.querySelector('.navbar-cart.desktop-cart .cart-count');
-        if (desktopCartCount && cartCountEl) {
-            desktopCartCount.textContent = cartCountEl.textContent;
+        if (cartEls.desktopCartCount && cartEls.count) {
+            cartEls.desktopCartCount.textContent = cartEls.count.textContent;
         }
     }
 
-    // Patch updateCartCount to also update dropdown
+    // Patch updateCartCount to also update dropdown & desktop badges
     const origUpdateCartCount = updateCartCount;
-    window.updateCartCount = function() {
+    window.updateCartCount = function () {
         origUpdateCartCount();
         updateDropdownCartCount();
         updateDesktopCartCount();
@@ -249,56 +257,60 @@
      * Render all cart items on the cart page and attach listeners.
      */
     function renderCartItems() {
-        if (!cartItemsContainer) return;
+        if (!cartEls.itemsContainer) return;
         const cart = getCartItems();
 
         // Clear existing items
-        cartItemsContainer.innerHTML = '';
+        cartEls.itemsContainer.innerHTML = '';
 
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-            if (checkoutBtn) checkoutBtn.disabled = true;
+            cartEls.itemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+            if (cartEls.checkoutBtn) cartEls.checkoutBtn.disabled = true;
             renderPriceBreakdown();
             updateCartCount();
             return;
         }
 
-        // For each item, build its DOM row
-        cart.forEach(item => {
-            const row = document.createElement('div');
-            row.className = 'cart-item';
-            row.dataset.id = item.id;
+        // Create a <ul> for semantic markup
+        const listEl = document.createElement('ul');
+        listEl.className = 'cart-list';
 
-            // Stock alert (if item.stock exists and < 5)
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'cart-item';
+            li.dataset.id = item.id;
+
+            // Stock alert
             let stockInfo = '';
             if (typeof item.stock === 'number' && item.stock < 5) {
-                stockInfo = `<p class="stock-alert">Only ${item.stock} left in stock!</p>`;
+                stockInfo = `<p class="stock-alert" aria-live="polite">Only ${item.stock} left in stock!</p>`;
             }
 
             const wishlistText = item.inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist';
-
-            row.innerHTML = `
-        <img src="${item.image}" alt="${item.name}" class="cart-item-image" />
-        <div class="cart-item-details">
-          <h3 class="cart-item-name">${item.name}</h3>
-          <p>Size: ${item.size || 'N/A'}</p>
-          <p>Color: ${item.color || 'N/A'}</p>
-          <p class="cart-item-price">$${item.price.toFixed(2)}</p>
-          ${stockInfo}
-          <div class="cart-item-quantity">
-            <label for="quantity-${item.id}">Quantity:</label>
-            <input type="number" id="quantity-${item.id}" class="quantity-input" data-id="${item.id}" min="1" value="${item.quantity}" />
-          </div>
-          <button class="btn btn-danger remove-item-btn" data-id="${item.id}">Remove</button>
-          <button class="btn btn-wishlist wishlist-btn" data-id="${item.id}">${wishlistText}</button>
-          <p><a href="#" class="size-fit-link">Size & Fit Guide</a></p>
-        </div>
-      `;
-            cartItemsContainer.appendChild(row);
+            li.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="cart-item-image" />
+                <div class="cart-item-details">
+                  <h3 class="cart-item-name">${item.name}</h3>
+                  <p>Size: ${item.size || 'N/A'}</p>
+                  <p>Color: ${item.color || 'N/A'}</p>
+                  <p class="cart-item-price">$${item.price.toFixed(2)}</p>
+                  ${stockInfo}
+                  <div class="cart-item-quantity">
+                    <label for="quantity-${item.id}">Quantity for ${item.name}:</label>
+                    <input type="number" id="quantity-${item.id}" class="quantity-input" data-id="${item.id}" min="1" value="${item.quantity}" />
+                  </div>
+                  <button class="btn btn-danger remove-item-btn" data-id="${item.id}">Remove</button>
+                  <button class="btn btn-wishlist wishlist-btn" data-id="${item.id}">${wishlistText}</button>
+                  <p><button class="link-btn size-fit-link" aria-disabled="true">Size & Fit Guide</button></p>
+                </div>
+            `;
+            listEl.appendChild(li);
         });
 
+        cartEls.itemsContainer.appendChild(listEl);
+
         // Enable checkout
-        if (checkoutBtn) checkoutBtn.disabled = false;
+        if (cartEls.checkoutBtn) cartEls.checkoutBtn.disabled = false;
 
         // Render prices
         renderPriceBreakdown();
@@ -350,36 +362,39 @@
      * Apply a coupon code (if valid) and re-render price breakdown.
      */
     function applyCoupon() {
-        const code = (couponInputEl?.value.trim() || '').toUpperCase();
-        const validCoupons = ['SAVE10', 'FREESHIP'];
-        if (validCoupons.includes(code)) {
+        const code = (cartEls.couponInput?.value.trim() || '').toUpperCase();
+        if (COUPONS.hasOwnProperty(code)) {
             setAppliedCouponCode(code);
-            couponMessageEl.textContent = `Coupon "${code}" applied!`;
+            cartEls.couponMessage.textContent = `Coupon "${code}" applied!`;
             showNotification(`Coupon "${code}" applied!`, 'success');
         } else {
             setAppliedCouponCode(null);
-            couponMessageEl.textContent = 'Invalid coupon code.';
+            cartEls.couponMessage.textContent = 'Invalid coupon code.';
             showNotification('Invalid coupon code.', 'error');
         }
         renderPriceBreakdown();
     }
 
     /**
-     * Estimate shipping cost (mock logic) and display it.
+     * Estimate shipping cost based on ZIP and display it.
      */
     function estimateShipping() {
-        const zip = shippingZipEl?.value.trim() || '';
+        const zip = cartEls.shippingZip?.value.trim() || '';
         if (!zip) {
-            shippingEstimateMessageEl.textContent = 'Please enter a ZIP/Postal Code.';
+            cartEls.shippingEstimateMessage.textContent = 'Please enter a ZIP/Postal Code.';
             return;
         }
         if (/^\d{5}$/.test(zip)) {
-            const cost = calculateShippingCost().toFixed(2);
-            shippingEstimateMessageEl.textContent = `Estimated shipping cost: $${cost}`;
+            // If FREESHIP coupon applied, show free shipping
+            if (getAppliedCouponCode() === 'FREESHIP') {
+                cartEls.shippingEstimateMessage.textContent = 'Shipping is free with your coupon!';
+            } else {
+                const cost = calculateShippingCost().toFixed(2);
+                cartEls.shippingEstimateMessage.textContent = `Estimated shipping cost: $${cost}`;
+            }
         } else {
-            shippingEstimateMessageEl.textContent = 'Invalid ZIP/Postal Code format.';
+            cartEls.shippingEstimateMessage.textContent = 'Invalid ZIP/Postal Code format.';
         }
-        // After estimating, re-render price breakdown to update shipping in the total
         renderPriceBreakdown();
     }
 
@@ -387,38 +402,39 @@
      * Handle cart‐page events (quantity changes, remove, wishlist, size & fit).
      */
     function handleCartPageClick(e) {
-        // Quantity change
-        if (e.target.matches('.quantity-input')) {
-            const id = e.target.dataset.id;
-            let newQty = parseInt(e.target.value, 10);
+        const target = e.target;
+        // Quantity change (use 'input' event on quantity inputs)
+        if (target.matches('.quantity-input')) {
+            const id = target.dataset.id;
+            let newQty = parseInt(target.value, 10);
             if (isNaN(newQty) || newQty < 1) {
                 newQty = 1;
-                e.target.value = '1';
+                target.value = '1';
             }
             updateCartItemQuantity(id, newQty);
             return;
         }
 
         // Remove item
-        if (e.target.matches('.remove-item-btn')) {
+        if (target.matches('.remove-item-btn')) {
             e.preventDefault();
-            const id = e.target.dataset.id;
+            const id = target.dataset.id;
             removeCartItem(id);
             showNotification('Item removed from cart.', 'info');
             return;
         }
 
         // Wishlist toggle
-        if (e.target.matches('.wishlist-btn')) {
+        if (target.matches('.wishlist-btn')) {
             e.preventDefault();
-            const id = e.target.dataset.id;
+            const id = target.dataset.id;
             toggleWishlist(id);
             showNotification('Wishlist status updated.', 'info');
             return;
         }
 
-        // Size & Fit link
-        if (e.target.matches('.size-fit-link')) {
+        // Size & Fit link (disabled)
+        if (target.matches('.size-fit-link')) {
             e.preventDefault();
             showNotification('Size & Fit guide is coming soon!', 'info');
         }
@@ -438,14 +454,16 @@
      * Filter and sort products based on selected categories, price, and sort order.
      */
     function filterProducts() {
-        if (!productGridEl) return;
-        const selectedCategories = Array.from(categoryCheckboxes)
+        const grid = filterEls.productGrid;
+        if (!grid) return;
+
+        const selectedCategories = Array.from(filterEls.categoryCheckboxes)
             .filter(cb => cb.checked)
             .map(cb => cb.value);
-        const maxPrice = parseFloat(priceRangeEl?.value) || Infinity;
-        const sortValue = sortSelectEl?.value || 'name-asc';
+        const maxPrice = parseFloat(filterEls.priceRange?.value) || Infinity;
+        const sortValue = filterEls.sortSelect?.value || 'name-asc';
 
-        let items = Array.from(document.querySelectorAll('.product-item'));
+        let items = Array.from(grid.querySelectorAll('.product-item'));
 
         items.forEach(prod => {
             const category = prod.dataset.category || '';
@@ -480,15 +498,29 @@
         });
 
         // Re-append in sorted order
-        visible.forEach(p => productGridEl.appendChild(p));
+        visible.forEach(p => grid.appendChild(p));
+
+        // If no products visible, show a "No results" message
+        const anyVisible = visible.length > 0;
+        let noResultsEl = grid.querySelector('.no-results');
+        if (!anyVisible) {
+            if (!noResultsEl) {
+                noResultsEl = document.createElement('p');
+                noResultsEl.className = 'no-results';
+                noResultsEl.setAttribute('aria-live', 'polite');
+                noResultsEl.textContent = 'No products match your criteria.';
+                grid.appendChild(noResultsEl);
+            }
+        } else if (noResultsEl) {
+            noResultsEl.remove();
+        }
     }
 
     /**
      * If a search query is present in the URL, filter products by name/title.
      */
     function filterProductsBySearch(products) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const search = urlParams.get('search');
+        const search = getQueryParam('search');
         if (!search) return products;
         const searchLower = search.toLowerCase();
         return products.filter(item => {
@@ -501,11 +533,11 @@
      * Update URL parameters based on selected filters/sort, without reloading.
      */
     function updateURLParams() {
-        const selectedCategories = Array.from(categoryCheckboxes)
+        const selectedCategories = Array.from(filterEls.categoryCheckboxes)
             .filter(cb => cb.checked)
             .map(cb => cb.value);
-        const maxPrice = priceRangeEl?.value || '';
-        const sortValue = sortSelectEl?.value || '';
+        const maxPrice = filterEls.priceRange?.value || '';
+        const sortValue = filterEls.sortSelect?.value || '';
 
         const params = new URLSearchParams();
         if (selectedCategories.length) params.set('category', selectedCategories.join(','));
@@ -526,22 +558,22 @@
         const catParam = params.get('category');
         if (catParam) {
             const cats = catParam.split(',');
-            categoryCheckboxes.forEach(cb => {
+            filterEls.categoryCheckboxes.forEach(cb => {
                 cb.checked = cats.includes(cb.value);
             });
         }
 
         // Price
         const priceParam = params.get('price');
-        if (priceParam && priceRangeEl && priceValueEl) {
-            priceRangeEl.value = priceParam;
-            priceValueEl.textContent = `$${priceParam}`;
+        if (priceParam && filterEls.priceRange && filterEls.priceValue) {
+            filterEls.priceRange.value = priceParam;
+            filterEls.priceValue.textContent = `$${priceParam}`;
         }
 
         // Sort
         const sortParam = params.get('sort');
-        if (sortParam && sortSelectEl) {
-            sortSelectEl.value = sortParam;
+        if (sortParam && filterEls.sortSelect) {
+            filterEls.sortSelect.value = sortParam;
         }
     }
 
@@ -549,24 +581,28 @@
      * Handle global clicks: add-to-cart or product-item redirect.
      */
     function handleGlobalClick(e) {
+        const target = e.target;
+
         // ADD TO CART
-        if (e.target.matches('.add-to-cart')) {
+        if (target.matches('.add-to-cart')) {
             e.preventDefault();
-            const productEl = e.target.closest('.product-item');
+            const productEl = target.closest('.product-item');
             if (!productEl) return;
+            // Assuming data attributes on the button for reliability
+            const btn = target;
             const product = {
-                id: productEl.querySelector('h3')?.textContent || '',
-                name: productEl.querySelector('h3')?.textContent || '',
-                price: parseFloat(productEl.querySelector('p')?.textContent.replace('$', '')) || 0,
-                image: productEl.querySelector('img')?.src || ''
+                id: btn.dataset.id || productEl.dataset.id || productEl.querySelector('h3')?.textContent || '',
+                name: btn.dataset.name || productEl.querySelector('h3')?.textContent || '',
+                price: parseFloat(btn.dataset.price || productEl.dataset.price || '0') || 0,
+                image: btn.dataset.image || productEl.querySelector('img')?.src || ''
             };
             addToCart(product);
             return;
         }
 
-        // PRODUCT CARD CLICK (redirect to category page)
-        const prodItemEl = e.target.closest('.product-item');
-        if (prodItemEl && !e.target.classList.contains('add-to-cart')) {
+        // PRODUCT CARD CLICK (redirect to category page), avoid inner buttons/links
+        const prodItemEl = target.closest('.product-item');
+        if (prodItemEl && !target.closest('button') && !target.closest('a')) {
             const cat = prodItemEl.dataset.category;
             if (cat) {
                 window.location.href = `products.html?category=${encodeURIComponent(cat)}`;
@@ -575,48 +611,25 @@
     }
 
     /**
-     * Toggle mobile navbar: update aria-expanded, aria-hidden, and focus.
-     */
-    function toggleNavbarMenu() {
-        const expanded = hamburgerEl.getAttribute('aria-expanded') === 'true';
-        hamburgerEl.setAttribute('aria-expanded', String(!expanded));
-        navbarMenuEl.setAttribute('aria-hidden', String(expanded));
-        navbarMenuEl.classList.toggle('active');
-        if (!expanded) {
-            // Menu just opened: focus first link
-            const firstLink = navbarMenuEl.querySelector('a');
-            if (firstLink) firstLink.focus();
-        } else {
-            // Menu closed: return focus to hamburger
-            hamburgerEl.focus();
-        }
-    }
-
-    /**
      * Toggle mobile navbar dropdown
      */
-    function toggleNavbarDropdown() {
-        if (!navbarDropdownEl || !hamburgerEl) return;
-        const isActive = navbarDropdownEl.classList.contains('active');
-        if (isActive) {
-            navbarDropdownEl.classList.remove('active');
-            navbarDropdownEl.setAttribute('aria-hidden', 'true');
-            hamburgerEl.setAttribute('aria-expanded', 'false');
-        } else {
-            navbarDropdownEl.classList.add('active');
-            navbarDropdownEl.setAttribute('aria-hidden', 'false');
-            hamburgerEl.setAttribute('aria-expanded', 'true');
-        }
+    function openNavbarDropdown() {
+        navbarEls.navbarDropdown.classList.add('active');
+        navbarEls.navbarDropdown.setAttribute('aria-hidden', 'false');
+        navbarEls.hamburger.setAttribute('aria-expanded', 'true');
     }
 
-    /**
-     * Close navbar (used when a link is clicked on mobile).
-     */
-    function closeNavbarMenu() {
-        hamburgerEl.setAttribute('aria-expanded', 'false');
-        navbarMenuEl.setAttribute('aria-hidden', 'true');
-        navbarMenuEl.classList.remove('active');
-        hamburgerEl.focus();
+    function closeNavbarDropdown() {
+        navbarEls.navbarDropdown.classList.remove('active');
+        navbarEls.navbarDropdown.setAttribute('aria-hidden', 'true');
+        navbarEls.hamburger.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleNavbarDropdown() {
+        if (!navbarEls.navbarDropdown || !navbarEls.hamburger) return;
+        const isActive = navbarEls.navbarDropdown.classList.contains('active');
+        if (isActive) closeNavbarDropdown();
+        else openNavbarDropdown();
     }
 
     /**
@@ -624,25 +637,25 @@
      */
     function setupFilterListeners() {
         // Category checkboxes
-        categoryCheckboxes.forEach(cb => {
+        filterEls.categoryCheckboxes.forEach(cb => {
             cb.addEventListener('change', () => {
                 filterProducts();
                 updateURLParams();
             });
         });
 
-        // Price range slider
-        if (priceRangeEl) {
-            priceRangeEl.addEventListener('input', () => {
-                if (priceValueEl) priceValueEl.textContent = `$${priceRangeEl.value}`;
+        // Price range slider (debounced)
+        if (filterEls.priceRange) {
+            filterEls.priceRange.addEventListener('input', debounce(() => {
+                if (filterEls.priceValue) filterEls.priceValue.textContent = `$${filterEls.priceRange.value}`;
                 filterProducts();
                 updateURLParams();
-            });
+            }, 200));
         }
 
         // Sort select
-        if (sortSelectEl) {
-            sortSelectEl.addEventListener('change', () => {
+        if (filterEls.sortSelect) {
+            filterEls.sortSelect.addEventListener('change', () => {
                 filterProducts();
                 updateURLParams();
             });
@@ -653,13 +666,13 @@
      * Basic contact form validation and feedback.
      */
     function setupContactForm() {
-        if (!contactFormEl) return;
-        contactFormEl.addEventListener('submit', e => {
+        if (!contactEl.form) return;
+        contactEl.form.addEventListener('submit', e => {
             e.preventDefault();
-            const name = contactFormEl.name.value.trim();
-            const email = contactFormEl.email.value.trim();
-            const subject = contactFormEl.subject.value.trim();
-            const message = contactFormEl.message.value.trim();
+            const name = contactEl.form.name.value.trim();
+            const email = contactEl.form.email.value.trim();
+            const subject = contactEl.form.subject.value.trim();
+            const message = contactEl.form.message.value.trim();
 
             if (!name || !email || !subject || !message) {
                 showNotification('Please fill in all fields.', 'error');
@@ -674,7 +687,7 @@
 
             // (You can add a fetch/ajax call here to send data to your server.)
             showNotification(`Thank you, ${name}! We'll get back to you soon.`, 'success');
-            contactFormEl.reset();
+            contactEl.form.reset();
         });
     }
 
@@ -684,25 +697,24 @@
     function setupCart() {
         updateCartCount();
 
-        if (cartItemsContainer) {
+        if (cartEls.itemsContainer) {
             // We are on the cart page
             renderCartItems();
-
-            // Attach event listeners for quantity, remove, wishlist, size/fit
-            document.body.addEventListener('click', handleCartPageClick);
+            cartEls.itemsContainer.addEventListener('click', handleCartPageClick);
+            cartEls.itemsContainer.addEventListener('input', handleCartPageClick);
         }
 
         // Coupon code apply
-        if (applyCouponBtn) {
-            applyCouponBtn.addEventListener('click', e => {
+        if (cartEls.applyCouponBtn) {
+            cartEls.applyCouponBtn.addEventListener('click', e => {
                 e.preventDefault();
                 applyCoupon();
             });
         }
 
         // Shipping estimate
-        if (estimateShippingBtn) {
-            estimateShippingBtn.addEventListener('click', e => {
+        if (cartEls.estimateShippingBtn) {
+            cartEls.estimateShippingBtn.addEventListener('click', e => {
                 e.preventDefault();
                 estimateShipping();
             });
@@ -729,50 +741,57 @@
             if (optExists) categorySelectDropdown.value = catParam;
         }
 
-        // 4. Filters: load from URL, then filter & set listeners
+        // 4. Search Bar
+        if (navbarSearchForm && navbarSearchInput) {
+            navbarSearchForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const query = navbarSearchInput.value.trim();
+                if (query.length > 0) {
+                    window.location.href = `./products.html?search=${encodeURIComponent(query)}`;
+                } else {
+                    navbarSearchInput.focus();
+                }
+            });
+        }
+
+        // 5. Filters: load from URL, then filter & set listeners
         loadFiltersFromURL();
         filterProducts();
         setupFilterListeners();
 
-        // 5. Navbar toggle (mobile) & close on link click
-        if (hamburgerEl && navbarDropdownEl) {
-            hamburgerEl.addEventListener('click', (e) => {
+        // 6. Navbar dropdown toggle & close on outside click or link click
+        if (navbarEls.hamburger && navbarEls.navbarDropdown) {
+            navbarEls.hamburger.addEventListener('click', (e) => {
                 e.stopPropagation();
                 toggleNavbarDropdown();
             });
-            // Close dropdown when clicking outside
             document.addEventListener('click', (e) => {
-                if (navbarDropdownEl.classList.contains('active') && !navbarDropdownEl.contains(e.target) && e.target !== hamburgerEl) {
-                    navbarDropdownEl.classList.remove('active');
-                    navbarDropdownEl.setAttribute('aria-hidden', 'true');
-                    hamburgerEl.setAttribute('aria-expanded', 'false');
+                if (
+                    navbarEls.navbarDropdown.classList.contains('active') &&
+                    !navbarEls.navbarDropdown.contains(e.target) &&
+                    e.target !== navbarEls.hamburger
+                ) {
+                    closeNavbarDropdown();
                 }
             });
-            // Close dropdown on resize above 768px
             window.addEventListener('resize', () => {
                 if (window.innerWidth >= 768) {
-                    navbarDropdownEl.classList.remove('active');
-                    navbarDropdownEl.setAttribute('aria-hidden', 'true');
-                    hamburgerEl.setAttribute('aria-expanded', 'false');
+                    closeNavbarDropdown();
                 }
             });
-            // Close dropdown when a link is clicked
-            navbarDropdownEl.querySelectorAll('a').forEach(link => {
+            navbarEls.navbarDropdown.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
-                    navbarDropdownEl.classList.remove('active');
-                    navbarDropdownEl.setAttribute('aria-hidden', 'true');
-                    hamburgerEl.setAttribute('aria-expanded', 'false');
+                    closeNavbarDropdown();
                 });
             });
         }
 
-        // 6. Scroll-to-top button
-        const scrollToTopBtn = document.getElementById('scrollToTop');
-        if (scrollToTopBtn) {
-            window.addEventListener('scroll', () => {
-                scrollToTopBtn.style.display = window.pageYOffset > 100 ? 'block' : 'none';
-            });
-            scrollToTopBtn.addEventListener('click', () => {
+        // 7. Scroll-to-top button (throttled)
+        if (navbarEls.scrollToTopBtn) {
+            window.addEventListener('scroll', debounce(() => {
+                navbarEls.scrollToTopBtn.style.display = window.pageYOffset > 100 ? 'block' : 'none';
+            }, 100));
+            navbarEls.scrollToTopBtn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
@@ -783,5 +802,4 @@
 
     // Wait for the DOM fully loaded, then run init
     window.addEventListener('DOMContentLoaded', init);
-
 })();
