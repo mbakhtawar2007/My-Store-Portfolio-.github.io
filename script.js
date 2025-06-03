@@ -655,6 +655,13 @@
             e.preventDefault();
             estimateShipping();
         });
+
+        // Proceed to Checkout
+        cartEls.checkoutBtn?.addEventListener('click', e => {
+            e.preventDefault();
+            showNotification('Checkout functionality not implemented yet.', 'info');
+            alert('Checkout functionality is not implemented yet.');
+        });
     };
 
     /**
