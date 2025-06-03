@@ -193,6 +193,32 @@ header {
     color: #fff;
 }
 
+/* Cart button in dropdown for mobile */
+.navbar-dropdown .dropdown-cart {
+    border-top: 1px solid #333;
+    margin-top: 8px;
+    padding-top: 8px;
+}
+
+.navbar-dropdown .dropdown-cart a {
+    color: var(--primary-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1.1rem;
+}
+
+.navbar-dropdown .dropdown-cart .cart-count {
+    margin-left: 8px;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 2px 7px;
+    border-radius: 50%;
+    position: static;
+}
+
 /* Search Bar Styles */
 .navbar-search {
     display: flex;
@@ -334,6 +360,10 @@ header {
     .hamburger {
         display: flex;
     }
+
+    .navbar-right {
+        display: none;
+    }
 }
 
 /* From 768px (Tablets and above) */
@@ -348,6 +378,10 @@ header {
     }
 
     .hamburger {
+        display: none;
+    }
+
+    .navbar-dropdown .dropdown-cart {
         display: none;
     }
 }

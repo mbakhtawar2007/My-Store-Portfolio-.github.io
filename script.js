@@ -201,6 +201,23 @@
         cartCountEl.textContent = totalCount;
     }
 
+    // --- Cart count sync for dropdown cart button ---
+    function updateDropdownCartCount() {
+        const dropdownCartCount = document.querySelector('.navbar-dropdown .dropdown-cart .cart-count');
+        if (dropdownCartCount && cartCountEl) {
+            dropdownCartCount.textContent = cartCountEl.textContent;
+        }
+    }
+
+    // Patch updateCartCount to also update dropdown
+    const origUpdateCartCount = updateCartCount;
+    window.updateCartCount = function() {
+        origUpdateCartCount();
+        updateDropdownCartCount();
+    };
+    // Initial sync on load
+    updateDropdownCartCount();
+
     /**
      * Add a product object to the cart (in localStorage), or increment quantity if it already exists.
      * @param {{id:string, name:string, price:number, image:string}} product
